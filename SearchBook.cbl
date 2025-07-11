@@ -11,7 +11,7 @@
        CONFIGURATION SECTION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT BOOK-FILE ASSIGN TO "Books.csv"
+           SELECT BOOK-FILE ASSIGN TO "../books.csv"
                ORGANIZATION IS LINE SEQUENTIAL
                FILE STATUS IS BOOK-STATUS.
 
@@ -43,7 +43,7 @@
        01 MATCH-FOUND             PIC X VALUE "N".
            88 BOOK-MATCH-FOUND    VALUE "Y".
            88 NO-BOOK-MATCH       VALUE "N".
-
+       01 found_flag PIC X value 'N'.
        01 HEADER-LINE             PIC X(100) VALUE ALL '-'.
        01 BOOK-HEADER.
            05 FILLER              PIC X(10) VALUE "BOOK ID".
@@ -55,8 +55,11 @@
            05 FILLER              PIC X(5)  VALUE "COUNT".
            05 FILLER              PIC X(5)  VALUE SPACES.
            05 FILLER              PIC X(15) VALUE "GENRE".
-
-       PROCEDURE DIVISION.
+       LINKAGE SECTION.
+       01 USER-CHOICE PIC 9(2).
+       PROCEDURE DIVISION USING USER-CHOICE.
+           PERFORM MAIN-PARAGRAPH
+           EXIT PROGRAM.
        MAIN-PARAGRAPH.
 
            MOVE SPACES TO SEARCH-CRITERIA
@@ -100,7 +103,7 @@
                END-READ
            END-PERFORM
 
-           IF NO-BOOK-MATCH
+           IF found_flag = 'N' THEN
                DISPLAY "No books matched your search criteria."
            END-IF
 
@@ -109,7 +112,7 @@
 
           *> -----------------
 
-           STOP RUN.
+      *>      STOP RUN.
 
        CHECK-MATCH.
            SET NO-BOOK-MATCH TO TRUE
@@ -118,4 +121,5 @@
               (SC-AUTHOR = SPACES OR SC-AUTHOR = BOOK-AUTHOR) AND
               (SC-GENRE = SPACES OR SC-GENRE = BOOK-GENRE)
                SET BOOK-MATCH-FOUND TO TRUE
+               MOVE 'Y' TO found_flag
            END-IF.

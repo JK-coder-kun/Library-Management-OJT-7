@@ -94,5 +94,5 @@
            ELSE
                DISPLAY "Book entry cancelled."
            END-IF.
-           STOP RUN.
+      *>      STOP RUN.
            END PROGRAM AddNewBook.

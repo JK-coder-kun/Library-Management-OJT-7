@@ -147,51 +147,51 @@
      *      END-EVALUATE.
       ******************************************************************
            LIST-ALL-MEMBERS.
-           DISPLAY "Works"
+           CALL 'ListAllMembers' USING USER-CHOICE
            GO TO MEMBERS-MENU.
 
            MEMBER-DETAIL.
-           DISPLAY "Works"
+           CALL 'MemberDetail' USING USER-CHOICE
            GO TO MEMBERS-MENU.
 
            ADD-NEW-MEMBER.
-           DISPLAY "Works"
+           CALL 'AddNewMember' USING USER-CHOICE
            GO TO MEMBERS-MENU.
 
            LIST-ALL-BOOKS.
-           DISPLAY "Works"
+           CALL 'ListAllBooks' USING USER-CHOICE
            GO TO BOOKS-MENU.
 
            SEARCH-BOOKS.
-           DISPLAY "Works"
+           CALL 'SearchBook' USING USER-CHOICE
            GO TO BOOKS-MENU.
 
            ADD-NEW-BOOK.
-           DISPLAY "Works"
+           CALL 'AddNewBook' USING USER-CHOICE
            GO TO BOOKS-MENU.
 
            UPDATE-BOOK-INFO.
-           DISPLAY "Works"
+           CALL 'UpdateBook' USING USER-CHOICE
            GO TO BOOKS-MENU.
 
            BORROW-BOOK.
-           DISPLAY "Works"
+           CALL 'BorrowBook' USING USER-CHOICE
            GO TO OPERATIONS-MENU.
 
            RETURN-BOOK.
-           DISPLAY "Works"
+           CALL 'ReturnBook' USING USER-CHOICE
            GO TO OPERATIONS-MENU.
 
            SHOW-HISTROY-LOG.
-           DISPLAY "Works"
+           CALL 'ShowHistoryLog' USING USER-CHOICE
            GO TO RECORD-MENU.
 
            SHOW-BORROWED-BOOKS-LOG.
-           DISPLAY "Works"
+           CALL 'ShowBorrowedBooks' USING USER-CHOICE
            GO TO RECORD-MENU.
 
            SHOW-FINE-LOG.
-           DISPLAY "Works"
+           CALL 'ShowFineLog' USING USER-CHOICE
            GO TO RECORD-MENU.
 
        END PROGRAM YOUR-PROGRAM-NAME.

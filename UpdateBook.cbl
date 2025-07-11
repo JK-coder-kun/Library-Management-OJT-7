@@ -58,8 +58,8 @@
                NOT AT END
                    MOVE BOOK-RECORD TO INPUT-STR
                    UNSTRING INPUT-STR DELIMITED BY ","
-                       INTO TEMP-ID, TEMP-NAME, TEMP-AUTHOR, TEMP-GENRE,
-                       TEMP-COUNT
+                       INTO TEMP-ID, TEMP-NAME, TEMP-AUTHOR,
+                       TEMP-COUNT,TEMP-GENRE
                    MOVE INPUT-STR TO LINE-CONTENT(LINE-ID)
                    ADD 1 TO LINE-ID
            END-READ
@@ -73,8 +73,8 @@
        FOUND-FLAG = 'Y'
            MOVE LINE-CONTENT(I) TO INPUT-STR
            UNSTRING INPUT-STR DELIMITED BY ","
-               INTO TEMP-ID, TEMP-NAME, TEMP-AUTHOR, TEMP-GENRE,
-               TEMP-COUNT
+               INTO TEMP-ID, TEMP-NAME, TEMP-AUTHOR,
+               TEMP-COUNT,TEMP-GENRE
            IF TEMP-ID = USER-ID
                DISPLAY "Current Name  : " TEMP-NAME
                DISPLAY "Current Author: " TEMP-AUTHOR
@@ -122,7 +122,7 @@
        END-PERFORM
        CLOSE BOOK-FILE
 
-       DISPLAY "Book info updated successfully."
-       STOP RUN.
+       DISPLAY "Book info updated successfully.".
+      *>  STOP RUN.
 
        END PROGRAM UpdateBook.

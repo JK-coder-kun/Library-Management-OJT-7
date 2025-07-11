@@ -6,12 +6,12 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. LIST-ALL-BOOKS-PGM.
+       PROGRAM-ID. ListAllBooks.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT BOOK-FILE ASSIGN TO "Books.csv"
+           SELECT BOOK-FILE ASSIGN TO "../books.csv"
                ORGANIZATION IS LINE SEQUENTIAL
                FILE STATUS IS BOOK-STATUS.
 
@@ -46,7 +46,11 @@
 
        01 HEADER-LINE              PIC X(100) VALUE ALL '-'.
 
-       PROCEDURE DIVISION.
+       LINKAGE SECTION.
+       01 USER-CHOICE PIC 9(2).
+       PROCEDURE DIVISION USING USER-CHOICE.
+           PERFORM MAIN-LOGIC
+           EXIT PROGRAM.
        MAIN-LOGIC.
            OPEN INPUT BOOK-FILE
            IF BOOK-STATUS NOT = '00'
@@ -74,4 +78,4 @@
            END-IF
            GOBACK.
 
-       END PROGRAM LIST-ALL-BOOKS-PGM.
+       END PROGRAM ListAllBooks.
