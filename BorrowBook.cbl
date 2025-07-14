@@ -76,6 +76,7 @@
        PROCEDURE DIVISION USING USER-CHOICE.
            PERFORM MAIN-PROCEDURE
            EXIT PROGRAM.
+
        MAIN-PROCEDURE.
 
        DISPLAY "Enter Member ID: "
@@ -216,5 +217,5 @@
        CLOSE BOOK-FILE
 
        DISPLAY "Book borrowed successfully. Transaction ID: "
-       NEW-TRAN-ID
-       STOP RUN.
+       NEW-TRAN-ID.
+       END PROGRAM BorrowBook.

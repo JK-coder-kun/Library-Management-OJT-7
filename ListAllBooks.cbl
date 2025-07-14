@@ -63,7 +63,7 @@
                DISPLAY HEADER-LINE
 
                PERFORM UNTIL BOOK-STATUS = '10'
-                   READ BOOK-FILE INTO BOOK-RECORD
+                   READ BOOK-FILE
                        AT END
                            DISPLAY " "
                        NOT AT END

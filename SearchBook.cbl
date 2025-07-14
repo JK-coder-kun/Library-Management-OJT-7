@@ -89,7 +89,7 @@
            DISPLAY HEADER-LINE
 
            PERFORM UNTIL BOOK-STATUS = "10"
-               READ BOOK-FILE INTO BOOK-RECORD
+               READ BOOK-FILE
                    AT END CONTINUE
                    NOT AT END
                        UNSTRING BOOK-RECORD DELIMITED BY ","
