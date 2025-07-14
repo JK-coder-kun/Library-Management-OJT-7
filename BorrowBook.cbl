@@ -47,13 +47,14 @@
        01  CURR-TRAN-ID       PIC 9(5).
        01  NEW-TRAN-ID        PIC 9(5).
        01  CURR-TRAN-ID-X     PIC X(5).
+       01  DUE-FLAG           PIC X(3).
        01  TODAY              PIC 9(8).
        01  WS-DAY             PIC 9(2).
        01  WS-MONTH           PIC 9(2).
        01  WS-YEAR            PIC 9(4).
-       01  START-DATE         PIC X(10).
+       01  START-DATE         PIC 9(10).
        01  RES                PIC 9(8).
-       01  END-DATE           PIC X(10).
+       01  END-DATE           PIC 9(10).
        01  END-DAY            PIC 9(2).
        01  END-MONTH          PIC 9(2).
        01  END-YEAR           PIC 9(4).
@@ -174,8 +175,8 @@
        MOVE TODAY(1:4) TO WS-YEAR
        MOVE TODAY(5:2) TO WS-MONTH
        MOVE TODAY(7:2) TO WS-DAY
-       STRING WS-MONTH DELIMITED BY "/"
-              WS-DAY   DELIMITED BY "/"
+       STRING WS-DAY DELIMITED BY SIZE "-"
+              WS-MONTH   DELIMITED BY SIZE "-"
               WS-YEAR  DELIMITED BY SIZE
            INTO START-DATE
 
@@ -185,8 +186,8 @@
        MOVE TODAY(1:4) TO END-YEAR
        MOVE TODAY(5:2) TO END-MONTH
        MOVE TODAY(7:2) TO END-DAY
-       STRING END-MONTH DELIMITED BY "/"
-              END-DAY   DELIMITED BY "/"
+       STRING END-DAY DELIMITED BY SIZE "-"
+              END-MONTH   DELIMITED BY SIZE "-"
               END-YEAR  DELIMITED BY SIZE
            INTO END-DATE
 
@@ -197,7 +198,7 @@
               WS-BOOK-ID DELIMITED BY SIZE ","
               START-DATE DELIMITED BY SIZE ","
               END-DATE DELIMITED BY SIZE ","
-              "OFF" DELIMITED BY SIZE ","
+              DUE-FLAG DELIMITED BY SIZE ","
               SPACE DELIMITED BY SIZE
            INTO LOG-REC
        WRITE LOG-REC

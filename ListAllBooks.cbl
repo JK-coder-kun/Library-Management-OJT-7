@@ -34,15 +34,15 @@
            05 FILLER                PIC X(15) VALUE "GENRE".
 
        01 BOOK-DETAIL.
-           05 book_id              PIC X(10).
+           05 book_id              PIC X(5).
            05 FILLER               PIC X(2)  VALUE SPACES.
            05 book_name            PIC X(30).
            05 FILLER               PIC X(2)  VALUE SPACES.
-           05 book_author          PIC X(25).
+           05 book_author          PIC X(30).
            05 FILLER               PIC X(2)  VALUE SPACES.
-           05 book_count           PIC 9(3).
+           05 book_count           PIC 9(2).
            05 FILLER               PIC X(5)  VALUE SPACES.
-           05 book_genre           PIC X(15).
+           05 book_genre           PIC X(30).
 
        01 HEADER-LINE              PIC X(100) VALUE ALL '-'.
 

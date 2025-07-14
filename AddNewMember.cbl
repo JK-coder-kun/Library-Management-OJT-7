@@ -35,11 +35,11 @@
 
        01  member_record.
            05  member_id          PIC 9(5) VALUE 0.
-           05  member_name        PIC X(20).
-           05  member_email       PIC X(30).
-           05  member_address     PIC X(90).
+           05  member_name        PIC X(30).
+           05  member_email       PIC X(35).
+           05  member_address     PIC X(50).
            05  member_gender      PIC X(1).
-           05  member_status      PIC X(10) VALUE "ACTIVE".
+           05  member_status      PIC X(8) VALUE "ACTIVE".
 
        01  member_id_disp         PIC 9(5).
        01  last_line              PIC X(200).

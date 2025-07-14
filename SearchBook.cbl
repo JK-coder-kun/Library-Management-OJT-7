@@ -24,21 +24,21 @@
        01 BOOK-STATUS             PIC XX.
 
        01 SEARCH-CRITERIA.
-           05 SC-ID               PIC X(10).
+           05 SC-ID               PIC X(5).
            05 SC-NAME             PIC X(30).
-           05 SC-AUTHOR           PIC X(25).
-           05 SC-GENRE            PIC X(15).
+           05 SC-AUTHOR           PIC X(35).
+           05 SC-GENRE            PIC X(30).
 
        01 BOOK-DETAIL.
-           05 BOOK-ID             PIC X(10).
+           05 BOOK-ID             PIC X(5).
            05 FILLER              PIC X(2) VALUE SPACES.
            05 BOOK-NAME           PIC X(30).
            05 FILLER              PIC X(2) VALUE SPACES.
-           05 BOOK-AUTHOR         PIC X(25).
+           05 BOOK-AUTHOR         PIC X(30).
            05 FILLER              PIC X(2) VALUE SPACES.
-           05 BOOK-COUNT          PIC 9(3).
+           05 BOOK-COUNT          PIC 9(2).
            05 FILLER              PIC X(5) VALUE SPACES.
-           05 BOOK-GENRE          PIC X(15).
+           05 BOOK-GENRE          PIC X(30).
 
        01 MATCH-FOUND             PIC X VALUE "N".
            88 BOOK-MATCH-FOUND    VALUE "Y".
