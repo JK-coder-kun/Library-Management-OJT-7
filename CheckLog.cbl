@@ -1,8 +1,7 @@
-      ******************************************************************
+      *****************************************************************
       * Author: Ei Khine Moe
-      * Date: 14/7/2025
-      * Purpose: Update due flags in log.csv
-      * Tectonics: cobc
+      * Date: 14/07/2025
+      * Purpose: Only update due_flag if return_date is blank
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. CheckLog.
@@ -43,16 +42,13 @@
               10 F-DUE    PIC X(3).
               10 F-RDT    PIC X(10).
 
-       LINKAGE SECTION.
-       01 USER-CHOICE PIC 9(2).
-       PROCEDURE DIVISION USING USER-CHOICE.
-       MAIN.
+       PROCEDURE DIVISION.
 
-      * Get current date as integer for comparison
+      * Get system date and convert to integer
            ACCEPT SYS-DATE FROM DATE YYYYMMDD
            COMPUTE SYS-DATE-INT = FUNCTION INTEGER-OF-DATE(SYS-DATE)
 
-      * Read records and parse into table
+      * Read all records from log.csv into table
            OPEN INPUT LOG-FILE
            PERFORM UNTIL FLG-EOF = 'Y'
                READ LOG-FILE
@@ -68,18 +64,16 @@
                                 F-DUE(IDX-CNT)
                                 F-RDT(IDX-CNT)
 
-                       MOVE F-EDT(IDX-CNT) TO RAW-END-DT
-                       UNSTRING RAW-END-DT DELIMITED BY "-"
-                           INTO DT-DAY, DT-MON, DT-YEAR
+                       IF FUNCTION TRIM(F-RDT(IDX-CNT)) = SPACE
+                           MOVE F-EDT(IDX-CNT) TO RAW-END-DT
+                           UNSTRING RAW-END-DT DELIMITED BY "-"
+                               INTO DT-DAY, DT-MON, DT-YEAR
+                           STRING DT-YEAR DELIMITED BY SIZE
+                                  DT-MON  DELIMITED BY SIZE
+                                  DT-DAY  DELIMITED BY SIZE
+                               INTO DT-FMT
+                      COMPUTE DT-INT = FUNCTION INTEGER-OF-DATE(DT-FMT)
 
-                       STRING DT-YEAR DELIMITED BY SIZE
-                              DT-MON  DELIMITED BY SIZE
-                              DT-DAY  DELIMITED BY SIZE
-                           INTO DT-FMT
-
-                       COMPUTE DT-INT = FUNCTION INTEGER-OF-DATE(DT-FMT)
-
-                       IF F-RDT(IDX-CNT) = SPACES
                            IF SYS-DATE-INT > DT-INT
                                MOVE "YES" TO F-DUE(IDX-CNT)
                            ELSE
@@ -87,30 +81,29 @@
                            END-IF
                        END-IF
 
-                       ADD 1 TO IDX-CNT
                        ADD 1 TO CNT-LOG
+                       ADD 1 TO IDX-CNT
                END-READ
            END-PERFORM
            CLOSE LOG-FILE
 
-      * Rewrite updated records to log.csv
+      * Rewrite log.csv with updated due_flag but original return_date
            OPEN OUTPUT LOG-FILE
            PERFORM VARYING IDX-CNT FROM 1 BY 1 UNTIL IDX-CNT > CNT-LOG
                STRING
-                   FUNCTION TRIM(F-ID(IDX-CNT))  DELIMITED BY SIZE ","
-                   FUNCTION TRIM(F-MID(IDX-CNT)) DELIMITED BY SIZE ","
-                   FUNCTION TRIM(F-BID(IDX-CNT)) DELIMITED BY SIZE ","
-                   FUNCTION TRIM(F-SDT(IDX-CNT)) DELIMITED BY SIZE ","
-                   FUNCTION TRIM(F-EDT(IDX-CNT)) DELIMITED BY SIZE ","
+                   F-ID(IDX-CNT) DELIMITED BY SIZE ","
+                   F-MID(IDX-CNT) DELIMITED BY SIZE ","
+                   F-BID(IDX-CNT) DELIMITED BY SIZE ","
+                   F-SDT(IDX-CNT) DELIMITED BY SIZE ","
+                   F-EDT(IDX-CNT) DELIMITED BY SIZE ","
                    F-DUE(IDX-CNT) DELIMITED BY SIZE ","
-                   FUNCTION TRIM(F-RDT(IDX-CNT)) DELIMITED BY SIZE
+                   F-RDT(IDX-CNT) DELIMITED BY SIZE
                    INTO LOG-LINE
-               END-STRING
                WRITE LOG-LINE
            END-PERFORM
            CLOSE LOG-FILE
 
-           DISPLAY "CheckLog completed. Due flags updated."
+           DISPLAY "CheckLog completed. "
            GOBACK.
 
        END PROGRAM CheckLog.
