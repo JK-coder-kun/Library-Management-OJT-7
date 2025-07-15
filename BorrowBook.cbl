@@ -47,7 +47,7 @@
        01  CURR-TRAN-ID       PIC 9(5).
        01  NEW-TRAN-ID        PIC 9(5).
        01  CURR-TRAN-ID-X     PIC X(5).
-       01  DUE-FLAG           PIC X(3).
+       01  DUE-FLAG           PIC X(3) VALUE "NO".
        01  TODAY              PIC 9(8).
        01  WS-DAY             PIC 9(2).
        01  WS-MONTH           PIC 9(2).
@@ -191,8 +191,13 @@
               END-YEAR  DELIMITED BY SIZE
            INTO END-DATE
 
-
-       OPEN EXTEND LOG-FILE
+       IF MAX-TRAN-ID = 0 THEN
+           OPEN OUTPUT LOG-FILE
+           MOVE 30001 TO NEW-TRAN-ID
+       ELSE
+           OPEN EXTEND LOG-FILE
+       END-IF
+      *>  OPEN EXTEND LOG-FILE
        STRING NEW-TRAN-ID DELIMITED BY SIZE ","
               WS-MEMBER-ID DELIMITED BY SIZE ","
               WS-BOOK-ID DELIMITED BY SIZE ","
