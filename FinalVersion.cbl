@@ -13,6 +13,9 @@
        PROCEDURE DIVISION.
 
       ***************************************************MAIN MENU START
+       INIT-CHECKLOG.
+            CALL 'CheckLog' USING USER-CHOICE.
+
      * MAIN-PROCEDURE.
      *      DISPLAY "=============================="
      *      DISPLAY         "LIBRARY SYSTEM"
