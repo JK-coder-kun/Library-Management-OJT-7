@@ -79,10 +79,12 @@
 
                        COMPUTE DT-INT = FUNCTION INTEGER-OF-DATE(DT-FMT)
 
-                       IF SYS-DATE-INT > DT-INT
-                           MOVE "YES" TO F-DUE(IDX-CNT)
-                       ELSE
-                           MOVE "NO " TO F-DUE(IDX-CNT)
+                       IF F-RDT(IDX-CNT) = SPACES
+                           IF SYS-DATE-INT > DT-INT
+                               MOVE "YES" TO F-DUE(IDX-CNT)
+                           ELSE
+                               MOVE "NO " TO F-DUE(IDX-CNT)
+                           END-IF
                        END-IF
 
                        ADD 1 TO IDX-CNT
