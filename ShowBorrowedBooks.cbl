@@ -72,7 +72,7 @@
            05 endDate PIC X(10).
            05 FILLER PIC X(5)  VALUE SPACES.
            05 dueFlag PIC X(10).
-       01 DECOR-LINE PIC X(124) VALUE ALL "-".
+       01 DECOR-LINE PIC X(124) VALUE ALL "*-".
        01 NON-RETURN-BOOKS-HEADER.
            05 HDR-LOG-ID       PIC X(5)  VALUE "LOGID".
            05 FILLER           PIC X(2)  VALUE SPACES.
@@ -115,9 +115,10 @@
                    UNSTRING log DELIMITED BY ','
                    INTO log_id, member_id, book_id, start_date
                    ,end_date, due_flag, return_date
+                   MOVE 0 TO non_space_count
                    INSPECT return_date TALLYING
                    non_space_count FOR CHARACTERS BEFORE INITIAL SPACE
-
+                       DISPLAY non_space_count
                        IF non_space_count = 0 THEN
                            ADD 1 TO total_not_return
                            IF due_flag = "YES" THEN
@@ -137,15 +138,15 @@
             END-PERFORM
             SORT non_return_books DESCENDING bookId
             IF IDX > 0 THEN
-                DISPLAY DECOR-LINE
+                DISPLAY DECOR-LINE"*"
                 DISPLAY NON-RETURN-BOOKS-HEADER
-                DISPLAY DECOR-LINE
+                DISPLAY DECOR-LINE"*"
             END-IF
             PERFORM UNTIL IDX = 0
                DISPLAY non_return_books(IDX)
                SET IDX DOWN BY 1
             END-PERFORM
-
+            DISPLAY DECOR-LINE"*"
             DISPLAY " "
             MOVE total_not_return TO disp_count
             DISPLAY "Number of Books that are not returned:"

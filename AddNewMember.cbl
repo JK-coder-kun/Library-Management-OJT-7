@@ -51,6 +51,7 @@
        PROCEDURE DIVISION USING USER-CHOICE.
            PERFORM MAIN-PARA
            EXIT PROGRAM.
+           STOP RUN.
        MAIN-PARA.
 
            *> Find last used member ID
@@ -100,6 +101,32 @@
            DISPLAY " "
 
            IF cm_choice = 1 THEN
+      *>          STRING
+      *>              member_id_disp        DELIMITED BY SIZE
+      *>              ","                   DELIMITED BY SIZE
+      *>              FUNCTION TRIM(member_name)    DELIMITED BY SIZE
+      *>              ","                   DELIMITED BY SIZE
+      *>              FUNCTION TRIM(member_email)   DELIMITED BY SIZE
+      *>              ","                   DELIMITED BY SIZE
+      *>              '"'                   DELIMITED BY SIZE
+      *>              FUNCTION TRIM(member_address) DELIMITED BY SIZE
+      *>              '"'                   DELIMITED BY SIZE
+      *>              ","                   DELIMITED BY SIZE
+      *>              FUNCTION TRIM(member_gender)  DELIMITED BY SIZE
+      *>              ","                   DELIMITED BY SIZE
+      *>              FUNCTION TRIM(member_status)  DELIMITED BY SIZE
+      *>              INTO WS-CSV-LINE
+      *>          END-STRING
+
+      *>          OPEN EXTEND MemberFile
+
+               IF last_member_id = 0 THEN
+                   MOVE 10001 TO member_id_disp
+                   OPEN OUTPUT MemberFile
+               ELSE
+                   OPEN EXTEND MemberFile
+               END-IF
+
                STRING
                    member_id_disp        DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
@@ -116,13 +143,6 @@
                    FUNCTION TRIM(member_status)  DELIMITED BY SIZE
                    INTO WS-CSV-LINE
                END-STRING
-
-               OPEN EXTEND MemberFile
-
-               IF last_member_id = 0 THEN
-                   MOVE WS-HEADER TO MemberRecord
-                   WRITE MemberRecord
-               END-IF
 
                MOVE WS-CSV-LINE TO MemberRecord
                WRITE MemberRecord

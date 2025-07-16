@@ -149,7 +149,14 @@
                            END-PERFORM
                            CLOSE FINE-FILE
                            COMPUTE NEW-FINE-ID = MAX-FINE-ID + 1
-                           OPEN EXTEND FINE-FILE
+      *>                      OPEN EXTEND FINE-FILE
+                           IF MAX-FINE-ID = 0 THEN
+                               OPEN OUTPUT FINE-FILE
+                               MOVE 00001 TO NEW-FINE-ID
+                           ELSE
+                               OPEN EXTEND FINE-FILE
+                           END-IF
+
                            STRING NEW-FINE-ID DELIMITED BY SIZE ","
                                   TRAN-ID-F DELIMITED BY SIZE ","
                                   MEMBER-ID-F DELIMITED BY SIZE ","
@@ -220,5 +227,6 @@
        CLOSE BOOK-FILE
 
        DISPLAY "Book return complete. Thank you.".
-
+       EXIT PROGRAM.
+       STOP RUN.
        END PROGRAM ReturnBook.

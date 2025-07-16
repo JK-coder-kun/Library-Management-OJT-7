@@ -42,7 +42,9 @@
               10 F-DUE    PIC X(3).
               10 F-RDT    PIC X(10).
 
-       PROCEDURE DIVISION.
+       LINKAGE SECTION.
+       01 USER-CHOICE PIC 9(2).
+       PROCEDURE DIVISION USING USER-CHOICE.
 
       * Get system date and convert to integer
            ACCEPT SYS-DATE FROM DATE YYYYMMDD
