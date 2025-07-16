@@ -105,7 +105,7 @@
            END-PERFORM
            CLOSE LOG-FILE
 
-           DISPLAY "CheckLog completed. "
+      *>      DISPLAY "CheckLog completed. "
            GOBACK.
 
        END PROGRAM CheckLog.
