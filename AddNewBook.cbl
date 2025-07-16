@@ -37,7 +37,7 @@
        PROCEDURE DIVISION USING USER-CHOICE.
            PERFORM MAIN-PROCEDURE
            EXIT PROGRAM.
-
+           STOP RUN.
            MAIN-PROCEDURE.
            OPEN INPUT BookFile
            PERFORM UNTIL eof-flag = 'Y'
@@ -54,6 +54,8 @@
            ADD 1 TO last-book-id
            MOVE last-book-id TO book_id
 
+           DISPLAY "book_ID__"book_id
+
            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
            DISPLAY "*         Add New Book to Library           *"
            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
@@ -68,6 +70,26 @@
            ACCEPT add-book-confirm-choice
 
            IF add-book-confirm-choice = 1 THEN
+      *>          STRING
+      *>              book_id           DELIMITED BY SIZE
+      *>              ","               DELIMITED BY SIZE
+      *>              FUNCTION TRIM(book_name)    DELIMITED BY SIZE
+      *>              ","               DELIMITED BY SIZE
+      *>              FUNCTION TRIM(book_author)  DELIMITED BY SIZE
+      *>              ","               DELIMITED BY SIZE
+      *>              book_count        DELIMITED BY SIZE
+      *>              ","               DELIMITED BY SIZE
+      *>              FUNCTION TRIM(book_genre)   DELIMITED BY SIZE
+      *>              INTO ws-book-line
+      *>          END-STRING
+
+               IF book_id = 1 THEN
+                   MOVE 20001 TO book_id
+                   OPEN OUTPUT BookFile
+               ELSE
+                   OPEN EXTEND BookFile
+               END-IF
+      *>          OPEN EXTEND BookFile
                STRING
                    book_id           DELIMITED BY SIZE
                    ","               DELIMITED BY SIZE
@@ -80,8 +102,6 @@
                    FUNCTION TRIM(book_genre)   DELIMITED BY SIZE
                    INTO ws-book-line
                END-STRING
-
-               OPEN EXTEND BookFile
                MOVE ws-book-line TO BookRecord
                WRITE BookRecord
                CLOSE BookFile

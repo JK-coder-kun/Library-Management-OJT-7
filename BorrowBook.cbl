@@ -77,7 +77,7 @@
        PROCEDURE DIVISION USING USER-CHOICE.
            PERFORM MAIN-PROCEDURE
            EXIT PROGRAM.
-
+           STOP RUN.
        MAIN-PROCEDURE.
 
        DISPLAY "Enter Member ID: "
