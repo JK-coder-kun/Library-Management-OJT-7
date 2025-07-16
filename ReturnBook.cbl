@@ -1,9 +1,3 @@
-      ******************************************************************
-      * Author: Htay Lwin & Kaung Khant Nyein
-      * Date: 15.7.2025
-      * Purpose: Return Book with fine handling and proper CSV updates
-      * Tectonics: cobc
-      ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ReturnBook.
 
@@ -21,6 +15,7 @@
        FILE SECTION.
        FD  LOG-FILE.
        01  LOG-REC         PIC X(200).
+       01  TMP-LOG-REC     PIC x(200).
        FD  BOOK-FILE.
        01  BOOK-REC        PIC X(200).
        FD  FINE-FILE.
@@ -29,204 +24,181 @@
        WORKING-STORAGE SECTION.
        01  WS-MEMBER-ID     PIC X(5).
        01  WS-BOOK-ID       PIC X(5).
-       01  TRAN-ID-F        PIC X(5).
-       01  MEMBER-ID-F      PIC X(5).
-       01  BOOK-ID-F        PIC X(5).
-       01  START-DATE       PIC X(10).
-       01  END-DATE         PIC X(10).
-       01  DUE-FLAG         PIC X(3).
-       01  RETURN-DATE-F    PIC X(10).
-       01  RETURN-DATE-FF    PIC X(10).
-       01  FILE-END         PIC X VALUE "N".
-       01  FOUND            PIC X VALUE "N".
-       01  TODAY-INT        PIC 9(8).
-       01  INT-RETURN       PIC 9(8).
-       01  INT-END          PIC 9(8).
+       01  WS-RETURN-DATE   PIC X(10).
+       01  SYS-DATE         PIC 9(8).
+       01  SYS-DD           PIC X(2).
+       01  SYS-MM           PIC X(2).
+       01  SYS-YYYY         PIC X(4).
+       01  WS-RETURN-INT    PIC 9(8).
+       01  END-INT          PIC 9(8).
        01  DIFF-DAYS        PIC 9(3).
        01  FINE-AMOUNT      PIC 9(5).
-       01  CONFIRM          PIC X.
-       01  MAX-FINE-ID      PIC 9(5) VALUE 0.
-       01  CURR-FINE-ID-X   PIC X(5).
-       01  CURR-FINE-ID     PIC 9(5).
-       01  NEW-FINE-ID      PIC 9(5).
-       01  WS-NEW-LOG-ENTRIES.
-           05 LOG-LINE OCCURS 100 TIMES.
-               10 LOG-DATA    PIC X(200).
-       01  LOG-IDX          PIC 9(3) VALUE 0.
+       01  FOUND            PIC X VALUE "N".
+       01  IDX              PIC 9(3).
+       01  CNT              PIC 9(3) VALUE 0.
+       01  BK-CNT           PIC 9(3) VALUE 0.
+       01  FILE-STATUS      PIC X(1).
+       01  LOG-TABLE.
+           05 LOG-ENTRY OCCURS 1000 TIMES.
+               10 TR-ID      PIC X(5).
+               10 MB-ID      PIC X(5).
+               10 BK-ID      PIC X(5).
+               10 ST-DATE    PIC X(10).
+               10 ED-DATE    PIC X(10).
+               10 DUE-FLAG   PIC X(3).
+               10 RTN-DATE   PIC X(10).
+
        01  BOOK-TABLE.
            05 BOOK-ENTRY OCCURS 100 TIMES.
-               10  BK-ID     PIC X(5).
-               10  BK-NAME   PIC X(30).
-               10  BK-AUTHOR PIC X(30).
-               10  BK-COUNT  PIC 99.
-               10  BK-GENRE  PIC X(30).
-       01  BK-IDX       PIC 9(3).
-       01  BK-TOTAL     PIC 9(3) VALUE 0.
-       01  WS-END-YYYYMMDD    PIC 9(8).
-       01  WS-END-YYYY        PIC X(4).
-       01  WS-END-MM          PIC X(2).
-       01  WS-END-DD          PIC X(2).
-       01  WS-RETURN-YYYYMMDD PIC 9(8).
-       01  WS-RETURN-DD       PIC X(2).
-       01  WS-RETURN-MM       PIC X(2).
-       01  WS-RETURN-YYYY     PIC X(4).
+               10 BK-ID-TAB     PIC X(5).
+               10 BK-NAME       PIC X(30).
+               10 BK-AUTHOR     PIC X(30).
+               10 BK-COUNT      PIC 99.
+               10 BK-GENRE      PIC X(30).
+
+
+       01  CURR-ID-X        PIC X(5).
+       01  CURR-ID-N        PIC 9(5).
+       01  MAX-FINE-ID      PIC 9(5) VALUE 0.
+       01  NEW-FINE-ID      PIC 9(5).
+       01  CONFIRM          PIC X.
 
        PROCEDURE DIVISION.
-
        DISPLAY "Enter Member ID: "
        ACCEPT WS-MEMBER-ID
        DISPLAY "Enter Book ID: "
        ACCEPT WS-BOOK-ID
 
-       MOVE FUNCTION CURRENT-DATE(1:8) TO TODAY-INT
-       MOVE TODAY-INT(1:4) TO WS-RETURN-YYYY
-       MOVE TODAY-INT(5:2) TO WS-RETURN-MM
-       MOVE TODAY-INT(7:2) TO WS-RETURN-DD
-       STRING WS-RETURN-DD DELIMITED BY SIZE "-"
-              WS-RETURN-MM DELIMITED BY SIZE "-"
-              WS-RETURN-YYYY DELIMITED BY SIZE
-              INTO RETURN-DATE-F
-       STRING WS-RETURN-YYYY DELIMITED BY SIZE
-              WS-RETURN-MM   DELIMITED BY SIZE
-              WS-RETURN-DD   DELIMITED BY SIZE
-              INTO WS-RETURN-YYYYMMDD
+       ACCEPT SYS-DATE FROM DATE YYYYMMDD
+       MOVE SYS-DATE(1:4) TO SYS-YYYY
+       MOVE SYS-DATE(5:2) TO SYS-MM
+       MOVE SYS-DATE(7:2) TO SYS-DD
+       STRING SYS-DD DELIMITED BY SIZE "-"
+       SYS-MM DELIMITED BY SIZE "-"
+       SYS-YYYY DELIMITED BY SIZE
+           INTO WS-RETURN-DATE
+       STRING SYS-YYYY DELIMITED BY SIZE
+       SYS-MM DELIMITED BY SIZE
+       SYS-DD DELIMITED BY SIZE
+           INTO WS-RETURN-INT
 
        OPEN INPUT LOG-FILE
-       MOVE 0 TO LOG-IDX
-       MOVE "N" TO FILE-END
-       PERFORM UNTIL FILE-END = "Y"
+       PERFORM UNTIL CNT = 100
            READ LOG-FILE
                AT END
-                   MOVE "Y" TO FILE-END
+                   EXIT PERFORM
                NOT AT END
-                   ADD 1 TO LOG-IDX
-                   MOVE LOG-REC TO LOG-DATA(LOG-IDX)
-
+                   ADD 1 TO CNT
                    UNSTRING LOG-REC DELIMITED BY ","
-                       INTO TRAN-ID-F, MEMBER-ID-F, BOOK-ID-F,
-                     START-DATE, END-DATE, DUE-FLAG, RETURN-DATE-FF
-
-                   IF MEMBER-ID-F = WS-MEMBER-ID AND
-                      BOOK-ID-F = WS-BOOK-ID AND
-                      RETURN-DATE-FF = SPACE
-                       MOVE "Y" TO FOUND
-
-                       IF DUE-FLAG = "NO"
-                           DISPLAY "Book returned on time."
-                       ELSE
-                           MOVE END-DATE(7:4) TO WS-END-YYYY
-                           MOVE END-DATE(1:2) TO WS-END-DD
-                           MOVE END-DATE(4:2) TO WS-END-MM
-                           STRING WS-END-YYYY DELIMITED BY SIZE
-                                  WS-END-MM   DELIMITED BY SIZE
-                                  WS-END-DD   DELIMITED BY SIZE
-                                  INTO WS-END-YYYYMMDD
-            MOVE FUNCTION INTEGER-OF-DATE(WS-END-YYYYMMDD) TO INT-END
-           MOVE FUNCTION INTEGER-OF-DATE(WS-RETURN-YYYYMMDD)
-           TO INT-RETURN
-                           COMPUTE DIFF-DAYS = INT-RETURN - INT-END
-                           COMPUTE FINE-AMOUNT = DIFF-DAYS * 1000
-                        DISPLAY "Overdue by ", DIFF-DAYS, " days."
-                        DISPLAY "Fine amount: ", FINE-AMOUNT, " MMK"
-                           DISPLAY "Return and confirm payment (Y/N)?"
-                           ACCEPT CONFIRM
-                           IF CONFIRM NOT = "Y"
-                               DISPLAY "Return canceled."
-                               STOP RUN
-                           END-IF
-                           OPEN INPUT FINE-FILE
-                           MOVE "N" TO FILE-END
-                           PERFORM UNTIL FILE-END = "Y"
-                               READ FINE-FILE
-                                   AT END
-                                       MOVE "Y" TO FILE-END
-                                   NOT AT END
-                  UNSTRING FINE-REC DELIMITED BY "," INTO CURR-FINE-ID-X
-                                    MOVE CURR-FINE-ID-X TO CURR-FINE-ID
-                                       IF CURR-FINE-ID > MAX-FINE-ID
-                                      MOVE CURR-FINE-ID TO MAX-FINE-ID
-                               END-READ
-                           END-PERFORM
-                           CLOSE FINE-FILE
-                           COMPUTE NEW-FINE-ID = MAX-FINE-ID + 1
-      *>                      OPEN EXTEND FINE-FILE
-                           IF MAX-FINE-ID = 0 THEN
-                               OPEN OUTPUT FINE-FILE
-                               MOVE 00001 TO NEW-FINE-ID
-                           ELSE
-                               OPEN EXTEND FINE-FILE
-                           END-IF
-
-                           STRING NEW-FINE-ID DELIMITED BY SIZE ","
-                                  TRAN-ID-F DELIMITED BY SIZE ","
-                                  MEMBER-ID-F DELIMITED BY SIZE ","
-                                  DIFF-DAYS DELIMITED BY SIZE ","
-                                  FINE-AMOUNT DELIMITED BY SIZE
-                                  INTO FINE-REC
-                           WRITE FINE-REC
-                           CLOSE FINE-FILE
-                       END-IF
-
-                       STRING TRAN-ID-F DELIMITED BY SIZE ","
-                              MEMBER-ID-F DELIMITED BY SIZE ","
-                              BOOK-ID-F DELIMITED BY SIZE ","
-                              START-DATE DELIMITED BY SIZE ","
-                              END-DATE DELIMITED BY SIZE ","
-                              DUE-FLAG DELIMITED BY SIZE ","
-                              RETURN-DATE-F DELIMITED BY SIZE
-                           INTO LOG-DATA(LOG-IDX)
+                       INTO TR-ID(CNT) MB-ID(CNT) BK-ID(CNT)
+                 ST-DATE(CNT) ED-DATE(CNT) DUE-FLAG(CNT) RTN-DATE(CNT)
            END-READ
        END-PERFORM
        CLOSE LOG-FILE
 
+       PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > CNT
+           IF MB-ID(IDX) = WS-MEMBER-ID AND
+              BK-ID(IDX) = WS-BOOK-ID AND
+              RTN-DATE(IDX) = SPACES
+               MOVE WS-RETURN-DATE TO RTN-DATE(IDX)
+               MOVE "Y" TO FOUND
+
+               IF DUE-FLAG(IDX) = "YES"
+                   MOVE ED-DATE(IDX)(7:4) TO SYS-YYYY
+                   MOVE ED-DATE(IDX)(1:2) TO SYS-DD
+                   MOVE ED-DATE(IDX)(4:2) TO SYS-MM
+                   STRING SYS-YYYY DELIMITED BY SIZE SYS-MM
+                   DELIMITED BY SIZE SYS-DD DELIMITED BY SIZE
+                       INTO END-INT
+           MOVE FUNCTION INTEGER-OF-DATE(WS-RETURN-INT) TO WS-RETURN-INT
+           MOVE FUNCTION INTEGER-OF-DATE(END-INT) TO END-INT
+                   COMPUTE DIFF-DAYS = WS-RETURN-INT - END-INT
+                   COMPUTE FINE-AMOUNT = DIFF-DAYS * 1000
+                   DISPLAY "Overdue by ", DIFF-DAYS, " days."
+                   DISPLAY "Fine: ", FINE-AMOUNT, " MMK"
+                   DISPLAY "Confirm return and pay fine (Y/N)?"
+                   ACCEPT CONFIRM
+                   IF CONFIRM NOT = "Y"
+                       DISPLAY "Return canceled." STOP RUN
+                   END-IF
+
+                   OPEN INPUT FINE-FILE
+                   PERFORM UNTIL FILE-STATUS = "Y"
+                       READ FINE-FILE
+                           AT END MOVE "Y" TO FILE-STATUS
+                           NOT AT END
+                   UNSTRING FINE-REC DELIMITED BY "," INTO CURR-ID-X
+                               MOVE CURR-ID-X TO CURR-ID-N
+                               IF CURR-ID-N > MAX-FINE-ID
+                                   MOVE CURR-ID-N TO MAX-FINE-ID
+                       END-READ
+                   END-PERFORM
+                   CLOSE FINE-FILE
+                   COMPUTE NEW-FINE-ID = MAX-FINE-ID + 1
+                   OPEN EXTEND FINE-FILE
+                   STRING NEW-FINE-ID DELIMITED BY SIZE ","
+                   TR-ID(IDX) DELIMITED BY SIZE ","
+                   MB-ID(IDX) DELIMITED BY SIZE ","
+                   DIFF-DAYS DELIMITED BY SIZE ","
+                   FINE-AMOUNT DELIMITED BY SIZE
+                       INTO FINE-REC
+                   WRITE FINE-REC
+                   CLOSE FINE-FILE
+               END-IF
+               EXIT PERFORM
+           END-IF
+       END-PERFORM
+
        IF FOUND NOT = "Y"
-       DISPLAY "No matching for the given Member ID and Book ID."
-       STOP RUN
+           DISPLAY "No matching record found."
+           STOP RUN
        END-IF
 
        OPEN OUTPUT LOG-FILE
-       PERFORM VARYING LOG-IDX FROM 1 BY 1 UNTIL LOG-IDX > 100
-           IF LOG-DATA(LOG-IDX) NOT = SPACE
-               MOVE LOG-DATA(LOG-IDX) TO LOG-REC
-               WRITE LOG-REC
-           END-IF
+       PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > CNT
+           STRING TR-ID(IDX) DELIMITED BY SIZE","
+           MB-ID(IDX) DELIMITED BY SIZE ","
+           BK-ID(IDX) DELIMITED BY SIZE ","
+           ST-DATE(IDX) DELIMITED BY SIZE ","
+           ED-DATE(IDX) DELIMITED BY SIZE ","
+           DUE-FLAG(IDX) DELIMITED BY SIZE ","
+           RTN-DATE(IDX) DELIMITED BY SIZE
+               INTO TMP-LOG-REC
+            WRITE TMP-LOG-REC
        END-PERFORM
        CLOSE LOG-FILE
 
-       MOVE 0 TO BK-TOTAL
-       MOVE 1 TO BK-IDX
        OPEN INPUT BOOK-FILE
-       MOVE "N" TO FILE-END
-       PERFORM UNTIL FILE-END = "Y"
+       PERFORM UNTIL BK-CNT = 100
            READ BOOK-FILE
-               AT END
-                   MOVE "Y" TO FILE-END
+               AT END EXIT PERFORM
                NOT AT END
+                   ADD 1 TO BK-CNT
                    UNSTRING BOOK-REC DELIMITED BY ","
-                       INTO BK-ID(BK-IDX), BK-NAME(BK-IDX),
-                            BK-AUTHOR(BK-IDX), BK-COUNT(BK-IDX),
-                            BK-GENRE(BK-IDX)
-                   IF BK-ID(BK-IDX) = WS-BOOK-ID
-                       COMPUTE BK-COUNT(BK-IDX) = BK-COUNT(BK-IDX) + 1
-                   END-IF
-                   ADD 1 TO BK-IDX
-                   ADD 1 TO BK-TOTAL
+                       INTO BK-ID-TAB(BK-CNT),BK-NAME(BK-CNT),
+                       BK-AUTHOR(BK-CNT), BK-COUNT(BK-CNT),
+                       BK-GENRE(BK-CNT)
        END-PERFORM
        CLOSE BOOK-FILE
 
+       PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > BK-CNT
+           IF BK-ID-TAB(IDX) = WS-BOOK-ID
+               ADD 1 TO BK-COUNT(IDX)
+               EXIT PERFORM
+           END-IF
+       END-PERFORM
+
        OPEN OUTPUT BOOK-FILE
-       PERFORM VARYING BK-IDX FROM 1 BY 1 UNTIL BK-IDX > BK-TOTAL
-           STRING BK-ID(BK-IDX) DELIMITED BY SIZE ","
-                  BK-NAME(BK-IDX) DELIMITED BY SIZE ","
-                  BK-AUTHOR(BK-IDX) DELIMITED BY SIZE ","
-                  BK-COUNT(BK-IDX) DELIMITED BY SIZE ","
-                  BK-GENRE(BK-IDX) DELIMITED BY SIZE
-              INTO BOOK-REC
+       PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > BK-CNT
+           STRING BK-ID-TAB(IDX) DELIMITED BY ","
+           BK-NAME(IDX) DELIMITED BY SIZE ","
+           BK-AUTHOR(IDX) DELIMITED BY SIZE ","
+           BK-COUNT(IDX) DELIMITED BY SIZE ","
+           BK-GENRE(IDX) DELIMITED BY SIZE
+               INTO BOOK-REC
            WRITE BOOK-REC
        END-PERFORM
        CLOSE BOOK-FILE
 
-       DISPLAY "Book return complete. Thank you.".
-       EXIT PROGRAM.
-       STOP RUN.
+       DISPLAY "Book returned successfully.".
        END PROGRAM ReturnBook.
