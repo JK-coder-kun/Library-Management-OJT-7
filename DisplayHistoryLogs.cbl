@@ -1,16 +1,19 @@
       ******************************************************************
-      * Author:
-      * Date:
-      * Purpose: Shows complete borrowing/return records
+      * Author:Htay Lwin
+      * Date:7/15/2025
+      * Purpose: Shows logs of borrowing/return records
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        PROGRAM-ID. DisplayHistoryLogs.
 
        ENVIRONMENT DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        INPUT-OUTPUT SECTION.
+      *-----------------------
        FILE-CONTROL.
-           SELECT LogFile ASSIGN TO "Log1.csv"
+           SELECT LogFile ASSIGN TO "Logs.csv"
                ORGANIZATION IS LINE SEQUENTIAL.
            SELECT MemberFile ASSIGN TO "Members.csv"
                ORGANIZATION IS LINE SEQUENTIAL.
@@ -18,7 +21,9 @@
                ORGANIZATION IS LINE SEQUENTIAL.
 
        DATA DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        FILE SECTION.
+      *-----------------------
        FD LogFile.
        01 LogRecord          PIC X(200).
 
@@ -29,6 +34,7 @@
        01 BookRecord         PIC X(200).
 
        WORKING-STORAGE SECTION.
+      *-----------------------
        01 EOF-Log            PIC X VALUE 'N'.
        01 EOF-Member         PIC X VALUE 'N'.
        01 EOF-Book           PIC X VALUE 'N'.
@@ -60,24 +66,23 @@
            05 b_genre         PIC X(30).
 
        01 DISPLAY-HEADER.
-           05 FILLER          PIC X(16) VALUE "Member Name     ".
-           05 FILLER          PIC X(1)  VALUE " ".
-           05 FILLER          PIC X(21) VALUE "Book Name           ".
-           05 FILLER          PIC X(1)  VALUE " ".
-           05 FILLER          PIC X(10) VALUE "Start Date".
-           05 FILLER          PIC X(1)  VALUE " ".
-           05 FILLER          PIC X(3)  VALUE "Due".
-           05 FILLER          PIC X(1)  VALUE " ".
-           05 FILLER          PIC X(10) VALUE "ReturnDate".
+           05 FILLER PIC X(9)   VALUE "TransID  ".
+           05 FILLER PIC X(18)  VALUE "Member Name       ".
+           05 FILLER PIC X(30)  VALUE "Book Name                    ".
+           05 FILLER PIC X(12)  VALUE "Start Date  ".
+           05 FILLER PIC X(3)   VALUE "Due".
+           05 FILLER PIC X(1)   VALUE " ".
+           05 FILLER PIC X(10)  VALUE "ReturnDate".
 
-       01 deco-line           PIC x(70) value all "*-".
+       01 deco-line           PIC x(83) value all "*-".
 
        LINKAGE SECTION.
+      *-----------------------
        01 USER-CHOICE PIC 9(2).
 
 
        PROCEDURE DIVISION USING USER-CHOICE.
-
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        MAIN-PROCEDURE.
            DISPLAY DISPLAY-HEADER
            OPEN INPUT LogFile MemberFile BookFile
@@ -87,6 +92,7 @@
            END-READ
 
            DISPLAY deco-line
+
            PERFORM UNTIL EOF-Log = 'Y'
                UNSTRING LogRecord DELIMITED BY ","
                    INTO l_tran_id, l_member_id, l_book_id,
@@ -98,9 +104,10 @@
                PERFORM FETCH-BOOK-NAME
 
 
-               DISPLAY match_member_name(1:16) " "
-                       match_book_name(1:21) " "
-                       l_start_date " "
+               DISPLAY l_tran_id "    "
+                       match_member_name(1:18)
+                       match_book_name(1:30)
+                       l_start_date " " " "
                        l_due_flag " "
                        l_return_date
 
@@ -113,6 +120,7 @@
 
            STOP RUN.
 
+      *-----------------------
        FETCH-MEMBER-NAME.
            MOVE SPACES TO match_member_name
            MOVE 'N' TO EOF-Member
@@ -144,7 +152,7 @@
                MOVE "NOT FOUND" TO match_member_name
            END-IF.
 
-
+      *-----------------------
        FETCH-BOOK-NAME.
            MOVE SPACES TO match_book_name
            MOVE 'N' TO EOF-Book
