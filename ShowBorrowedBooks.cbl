@@ -6,6 +6,7 @@
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ShowBorrowedBooks.
+
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
@@ -29,9 +30,11 @@
 
        FD LogFile.
        01 log PIC X(100).
+
        WORKING-STORAGE SECTION.
        01 file_status PIC XX.
        01 EOF PIC X VALUE 'N'.
+
        01 member_src_id PIC 9(5).
        01 book_src_id PIC 9(5).
        01 no_book_flag PIC X VALUE "N".
@@ -40,6 +43,7 @@
        01 total_due PIC 999 VALUE 0.
        01 disp_count PIC ZZ9.
        01 non_space_count PIC 99.
+
        01 history.
            05 FILLER PIC X(5)   VALUE SPACES.
            05 log_id PIC 9(5).
@@ -72,7 +76,8 @@
            05 endDate PIC X(10).
            05 FILLER PIC X(5)  VALUE SPACES.
            05 dueFlag PIC X(10).
-       01 DECOR-LINE PIC X(124) VALUE ALL "*-".
+
+
        01 NON-RETURN-BOOKS-HEADER.
            05 HDR-LOG-ID       PIC X(5)  VALUE "LOGID".
            05 FILLER           PIC X(2)  VALUE SPACES.
@@ -89,6 +94,9 @@
            05 HDR-END-DATE     PIC X(10) VALUE "END DATE".
            05 FILLER           PIC X(5)  VALUE SPACES.
            05 HDR-DUE-FLAG     PIC X(10) VALUE "DUE FLAG".
+
+       01 DECOR-LINE PIC X(80) VALUE ALL "*-".
+
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
        PROCEDURE DIVISION USING USER-CHOICE.
@@ -96,7 +104,6 @@
            EXIT PROGRAM.
            STOP RUN.
 
-      *>  PROCEDURE DIVISION.
        MAIN-PROCEDURE.
             SET IDX TO 1
             SET IDX DOWN BY 1
@@ -115,10 +122,10 @@
                    UNSTRING log DELIMITED BY ','
                    INTO log_id, member_id, book_id, start_date
                    ,end_date, due_flag, return_date
-                   MOVE 0 TO non_space_count
+
                    INSPECT return_date TALLYING
                    non_space_count FOR CHARACTERS BEFORE INITIAL SPACE
-                       DISPLAY non_space_count
+
                        IF non_space_count = 0 THEN
                            ADD 1 TO total_not_return
                            IF due_flag = "YES" THEN
@@ -131,22 +138,29 @@
                            MOVE start_date to startDate(IDX)
                            MOVE end_date to endDate(IDX)
                            MOVE due_flag to dueFlag(IDX)
+
                            PERFORM EXTRACT-MEMBER-NAME
                            PERFORM EXTRACT-BOOK-NAME
                        END-IF
                 END-READ
             END-PERFORM
+
             SORT non_return_books DESCENDING bookId
             IF IDX > 0 THEN
-                DISPLAY DECOR-LINE"*"
+                DISPLAY " "
+                DISPLAY "Currently Borrowed Books"
+                DISPLAY "========================"
+                DISPLAY " "
+
+                DISPLAY DECOR-LINE
                 DISPLAY NON-RETURN-BOOKS-HEADER
-                DISPLAY DECOR-LINE"*"
+                DISPLAY DECOR-LINE
             END-IF
             PERFORM UNTIL IDX = 0
                DISPLAY non_return_books(IDX)
                SET IDX DOWN BY 1
             END-PERFORM
-            DISPLAY DECOR-LINE"*"
+
             DISPLAY " "
             MOVE total_not_return TO disp_count
             DISPLAY "Number of Books that are not returned:"
@@ -155,6 +169,8 @@
             DISPLAY "Number of not returned Books that are over due:"
             disp_count
             CLOSE LogFile.
+
+      *-----------------------------------------------------------------
        EXTRACT-MEMBER-NAME.
            OPEN INPUT MemberFile
                IF file_status not = '00' THEN
@@ -183,6 +199,7 @@
                END-IF
            CLOSE MemberFile.
 
+      *-----------------------------------------------------------------
        EXTRACT-BOOK-NAME.
            OPEN INPUT BookFile
                IF file_status not = '00' THEN
@@ -210,4 +227,5 @@
                    MOVE 'Not Found!' TO bookName(IDX)
                END-IF
            CLOSE BookFile.
+      *-----------------------------------------------------------------
        END PROGRAM ShowBorrowedBooks.

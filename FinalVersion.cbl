@@ -18,13 +18,14 @@
 
      * MAIN-PROCEDURE.
      *      DISPLAY "=============================="
-     *      DISPLAY         "LIBRARY SYSTEM"
+     *      DISPLAY "      ""LIBRARY SYSTEM""      "
      *      DISPLAY "=============================="
      *      DISPLAY "1) Members"
      *      DISPLAY "2) Books"
      *      DISPLAY "3) Operations"
      *      DISPLAY "4) Record"
      *      DISPLAY "5) Exit"
+     *      DISPLAY "=============================="
      *      DISPLAY "Enter your choice (1-5): "
      *      ACCEPT USER-CHOICE
      *
@@ -47,12 +48,13 @@
      ******************************************************MAIN MENU END
      * MEMBERS-MENU.
      *      DISPLAY "=============================="
-     *      DISPLAY          "MEMBERS MENU"
+     *      DISPLAY "       ""MEMBERS MENU""       "
      *      DISPLAY "=============================="
      *      DISPLAY "1) List All Members"
      *      DISPLAY "2) Member Details"
      *      DISPLAY "3) Add New Member"
      *      DISPLAY "4) Exit"
+     *      DISPLAY "=============================="
      *      DISPLAY "Enter your choice (1-4): "
      *      ACCEPT USER-CHOICE
      *
@@ -73,13 +75,14 @@
      *
      * BOOKS-MENU.
      *      DISPLAY "=============================="
-     *      DISPLAY          "BOOKS MENU"
+     *      DISPLAY "        ""BOOKS MENU""        "
      *      DISPLAY "=============================="
      *      DISPLAY "1) List All Books"
      *      DISPLAY "2) Searck Books"
      *      DISPLAY "3) Add New Book"
      *      DISPLAY "4) Update Book Info"
      *      DISPLAY "5) Exit"
+     *      DISPLAY "=============================="
      *      DISPLAY "Enter your choice (1-5): "
      *      ACCEPT USER-CHOICE
      *
@@ -102,11 +105,12 @@
      *
      * OPERATIONS-MENU.
      *      DISPLAY "=============================="
-     *      DISPLAY        "OPERATIONS MENU"
+     *      DISPLAY "      ""OPERATIONS MENU""     "
      *      DISPLAY "=============================="
      *      DISPLAY "1) Borrow Book"
      *      DISPLAY "2) Return Book"
      *      DISPLAY "3) Exit"
+     *      DISPLAY "=============================="
      *      DISPLAY "Enter your choice (1-3): "
      *      ACCEPT USER-CHOICE
      *
@@ -117,7 +121,7 @@
      *             PERFORM RETURN-BOOK
      *         WHEN 3
      *             DISPLAY "Exiting to Main Menu..."
-                   GO TO MAIN-PROCEDURE
+     *             GO TO MAIN-PROCEDURE
      *         WHEN OTHER
      *             DISPLAY "Invalid choice. Please try again."
      *             GO TO OPERATIONS-MENU
@@ -125,12 +129,13 @@
      *
      * RECORD-MENU.
      *      DISPLAY "=============================="
-     *      DISPLAY          "RECORD MENU"
+     *      DISPLAY "       ""RECORD MENU""        "
      *      DISPLAY "=============================="
      *      DISPLAY "1) Show History Log"
      *      DISPLAY "2) Show Borrowed books Log"
      *      DISPLAY "3) Show Fine Log"
      *      DISPLAY "4) Exit"
+     *      DISPLAY "=============================="
      *      DISPLAY "Enter your choice (1-4): "
      *      ACCEPT USER-CHOICE
      *
@@ -186,7 +191,7 @@
            GO TO OPERATIONS-MENU.
 
            SHOW-HISTROY-LOG.
-           CALL 'ShowHistoryLog' USING USER-CHOICE
+           CALL 'ShowHistoryLogs' USING USER-CHOICE
            GO TO RECORD-MENU.
 
            SHOW-BORROWED-BOOKS-LOG.
@@ -194,7 +199,7 @@
            GO TO RECORD-MENU.
 
            SHOW-FINE-LOG.
-           CALL 'ShowFineLog' USING USER-CHOICE
+           CALL 'ShowFineLogs' USING USER-CHOICE
            GO TO RECORD-MENU.
 
        END PROGRAM YOUR-PROGRAM-NAME.
