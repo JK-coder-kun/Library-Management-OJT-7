@@ -53,11 +53,40 @@
            05  member_flag       PIC X(10).
            05 id_to_email        PIC X(70).
            05 gender_n_flag      PIC X(11).
+       01  DISPLAY-ROW.
+           05 D-ID        PIC X(5).
+           05 FILLER      PIC X VALUE " ".
+           05 FILLER      PIC X VALUE "|".
+           05 D-NAME      PIC X(30).
+           05 FILLER      PIC X(2) VALUE " |".
+           05 D-EMAIL     PIC X(35).
+           05 FILLER      PIC X(2) VALUE " |".
+           05 D-ADDR      PIC X(40).
+           05 FILLER      PIC X(2) VALUE " |".
+           05 D-GENDER    PIC X.
+           05 FILLER      PIC X(9) VALUE "      |".
+           05 D-FLAG      PIC X(10).
+       01 DISPLAY-HEADER.
+           05 FILLER         PIC X(5)  VALUE " ID  ".
+           05 FILLER         PIC X     VALUE " ".
+           05 FILLER         PIC X     VALUE "|".
+           05 FILLER         PIC X(30) VALUE " Name".
+           05 FILLER         PIC X(2)  VALUE " |".
+           05 FILLER         PIC X(35) VALUE " Email".
+           05 FILLER         PIC X(2)  VALUE " |".
+           05 FILLER         PIC X(40) VALUE " Address".
+           05 FILLER         PIC X(2)  VALUE " |".
+           05 FILLER         PIC X(1)  VALUE "G".
+           05 FILLER         PIC X(6)  VALUE "ender ".
+           05 FILLER         PIC X(2)  VALUE "| ".
+           05 FILLER         PIC X(10) VALUE " Flag    ".
+       01 DECOR-LINE PIC X(134) VALUE ALL "*-".
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
        PROCEDURE DIVISION USING USER-CHOICE.
            PERFORM MAIN-PROCEDURE
            EXIT PROGRAM.
+           STOP RUN.
        MAIN-PROCEDURE.
       **
       * The main procedure of the program
@@ -67,17 +96,10 @@
                 DISPLAY "Error opening File, Status :"file-status
             END-IF
             MOVE 'N' TO EOF
-            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-               "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-               "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-               "*-*"
-            DISPLAY "*ID   Name                           Email"
-            "                               Address               "
-                   "                            Gender  Member_Flag *"
-            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-               "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-               "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-               "*-*"
+            DISPLAY DECOR-LINE"*"
+
+            DISPLAY DISPLAY-HEADER
+            DISPLAY DECOR-LINE "*"
             MOVE 0 TO counter
             PERFORM UNTIL EOF = 'Y'
                READ MemberFile
@@ -99,8 +121,16 @@
                        member_gender member_flag
                    END-IF
 
-                   DISPLAY member_id " "member_name" "member_email
-                   " "member_addr" "member_gender"       "member_flag
+
+                   MOVE member_id     TO D-ID
+                   MOVE member_name   TO D-NAME
+                   MOVE member_email  TO D-EMAIL
+                   MOVE member_addr   TO D-ADDR
+                   MOVE member_gender TO D-GENDER
+                   MOVE member_flag   TO D-FLAG
+
+                   DISPLAY DISPLAY-ROW
+
                    ADD 1 TO counter
                    MOVE 0 TO comma_in_addr
                    IF counter >= 10 THEN
@@ -114,10 +144,7 @@
                    END-IF
                END-READ
             END-PERFORM.
-            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-               "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-               "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-               "*-*"
+            DISPLAY DECOR-LINE"*"
             CLOSE MemberFile.
             *> STOP RUN.
       ** add other procedures here

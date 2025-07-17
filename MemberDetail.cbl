@@ -86,10 +86,10 @@
            05 FILLER              PIC X(10)  VALUE "END DATE".
            05 FILLER              PIC X(5)   VALUE SPACES.
            05 FILLER              PIC X(11)  VALUE "RETURN DATE".
-           05 FILLER              PIC X(5)   VALUE SPACES.
+           05 FILLER              PIC X(4)   VALUE SPACES.
            05 FILLER              PIC X(10)  VALUE "DUE FLAG".
-       01 member_decor_line         PIC X(138) VALUE ALL "-".
-       01 decor_line         PIC X(101) VALUE ALL "-".
+       01 member_decor_line         PIC X(140) VALUE ALL "*-".
+       01 decor_line         PIC X(101) VALUE ALL "*-".
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
        PROCEDURE DIVISION USING USER-CHOICE.
@@ -110,7 +110,7 @@
                        IF member_id = search_member_id THEN
                        MOVE 'Y' TO found_flag
                        DISPLAY member_record_header
-                       DISPLAY member_decor_line
+                       DISPLAY member_decor_line'*'
                        INSPECT member TALLYING comma_in_addr FOR ALL '"'
                        IF comma_in_addr > 1 THEN
                            UNSTRING member DELIMITED BY '"'
