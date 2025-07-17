@@ -95,6 +95,7 @@
        PROCEDURE DIVISION USING USER-CHOICE.
            PERFORM MAIN-PROCEDURE
            EXIT PROGRAM.
+           STOP RUN.
        MAIN-PROCEDURE.
             OPEN INPUT MemberFile
                 DISPLAY "Enter Member ID to Search: "

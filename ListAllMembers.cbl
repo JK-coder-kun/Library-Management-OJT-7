@@ -78,6 +78,7 @@
                "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
                "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
                "*-*"
+            MOVE 0 TO counter
             PERFORM UNTIL EOF = 'Y'
                READ MemberFile
                AT END MOVE 'Y' TO EOF
