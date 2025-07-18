@@ -72,6 +72,9 @@
        01  BK-TOTAL       PIC 9(3) VALUE 0.
        01  BK-MATCH-IDX   PIC 9(3) VALUE 0.
 
+       01  FOUND-ID-FLAG     PIC X VALUE 'N'.  *> Book ID found flag
+       01  BOOK-AVAILABLE    PIC X VALUE 'N'.  *> Book count > 0 flag
+
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
        PROCEDURE DIVISION USING USER-CHOICE.
@@ -129,28 +132,41 @@
 
        OPEN INPUT BOOK-FILE
        PERFORM UNTIL FILE-END = 'Y'
-           READ BOOK-FILE
-               AT END
-                   MOVE 'Y' TO FILE-END
-               NOT AT END
-                   UNSTRING BOOK-REC DELIMITED BY ","
-                       INTO BK-ID(BK-IDX), BK-NAME(BK-IDX),
-                            BK-AUTHOR(BK-IDX), BK-COUNT(BK-IDX),
-                            BK-GENRE(BK-IDX)
-                 IF BK-ID(BK-IDX) = WS-BOOK-ID AND BK-COUNT(BK-IDX) > 0
-                       COMPUTE BK-COUNT(BK-IDX) = BK-COUNT(BK-IDX) - 1
-                       MOVE BK-IDX TO BK-MATCH-IDX
-                       MOVE 'Y' TO FOUND-BOOK
-                   END-IF
-                   ADD 1 TO BK-IDX
-                   ADD 1 TO BK-TOTAL
+       READ BOOK-FILE
+        AT END
+            MOVE 'Y' TO FILE-END
+        NOT AT END
+            UNSTRING BOOK-REC DELIMITED BY ","
+                INTO BK-ID(BK-IDX), BK-NAME(BK-IDX),
+                     BK-AUTHOR(BK-IDX), BK-COUNT(BK-IDX),
+                     BK-GENRE(BK-IDX)
+
+            IF BK-ID(BK-IDX) = WS-BOOK-ID
+                MOVE 'Y' TO FOUND-ID-FLAG
+
+                IF BK-COUNT(BK-IDX) > 0
+                    COMPUTE BK-COUNT(BK-IDX) = BK-COUNT(BK-IDX) - 1
+                    MOVE BK-IDX TO BK-MATCH-IDX
+                    MOVE 'Y' TO BOOK-AVAILABLE
+                END-IF
+            END-IF
+
+            ADD 1 TO BK-IDX
+            ADD 1 TO BK-TOTAL
        END-PERFORM
+
        CLOSE BOOK-FILE
 
-       IF FOUND-BOOK NOT = 'Y'
-           DISPLAY "Book not found or unavailable."
-           STOP RUN
+       IF FOUND-ID-FLAG = 'N'
+           DISPLAY "Book not found."
+       STOP RUN
+       ELSE
+           IF BOOK-AVAILABLE = 'N'
+               DISPLAY "Book is currently out of stock."
+        STOP RUN
+           END-IF
        END-IF
+
 
 
        MOVE 'N' TO FILE-END
