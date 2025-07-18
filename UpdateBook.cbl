@@ -49,6 +49,8 @@
        PROCEDURE DIVISION USING USER-CHOICE.
            PERFORM MAIN-PROCEDURE
            EXIT PROGRAM.
+           STOP RUN.
+
        MAIN-PROCEDURE.
            OPEN INPUT BOOK-FILE
            PERFORM UNTIL FILE-END = 'Y'
@@ -78,8 +80,9 @@
            IF TEMP-ID = USER-ID
                DISPLAY "Current Name  : " TEMP-NAME
                DISPLAY "Current Author: " TEMP-AUTHOR
-               DISPLAY "Current Genre : " TEMP-GENRE
                DISPLAY "Current Count : " TEMP-COUNT
+               DISPLAY "Current Genre : " TEMP-GENRE
+
                DISPLAY "Enter new name (or press ENTER to skip): "
                ACCEPT NEW-NAME
                IF NEW-NAME = SPACES THEN
@@ -90,21 +93,21 @@
                IF NEW-AUTHOR = SPACES THEN
                    MOVE TEMP-AUTHOR TO NEW-AUTHOR
                END-IF
-               DISPLAY "Enter new genre (or press ENTER to skip): "
-               ACCEPT NEW-GENRE
-               IF NEW-GENRE = SPACES THEN
-                   MOVE TEMP-GENRE TO NEW-GENRE
-               END-IF
                DISPLAY "Enter new count (or press ENTER to skip): "
                ACCEPT NEW-COUNT
-               IF NEW-COUNT = ZERO THEN
+               IF NEW-COUNT = SPACES THEN
                    MOVE TEMP-COUNT TO NEW-COUNT
+               END-IF
+               DISPLAY "Enter new genre (or press ENTER to skip): "
+               ACCEPT NEW-GENRE
+               IF NEW-GENRE = SPACE THEN
+                   MOVE TEMP-GENRE TO NEW-GENRE
                END-IF
                STRING TEMP-ID DELIMITED BY SIZE ","
                       NEW-NAME DELIMITED BY SIZE ","
                       NEW-AUTHOR DELIMITED BY SIZE ","
-                      NEW-GENRE DELIMITED BY SIZE ","
-                      NEW-COUNT DELIMITED BY SIZE
+                      NEW-COUNT DELIMITED BY SIZE ","
+                      NEW-GENRE DELIMITED BY SIZE
                    INTO LINE-CONTENT(I)
                MOVE 'Y' TO FOUND-FLAG
            END-IF
@@ -123,6 +126,7 @@
        CLOSE BOOK-FILE
 
        DISPLAY "Book info updated successfully.".
+       MOVE 'N' TO FOUND-FLAG.
       *>  STOP RUN.
 
        END PROGRAM UpdateBook.
