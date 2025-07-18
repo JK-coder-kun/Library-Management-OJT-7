@@ -53,7 +53,8 @@
      *      DISPLAY "1) List All Members"
      *      DISPLAY "2) Member Details"
      *      DISPLAY "3) Add New Member"
-     *      DISPLAY "4) Exit"
+            DISPLAY "4) Edit Member Info"
+     *      DISPLAY "5) Exit"
      *      DISPLAY "=============================="
      *      DISPLAY "Enter your choice (1-4): "
      *      ACCEPT USER-CHOICE
@@ -66,6 +67,8 @@
      *         WHEN 3
      *             PERFORM ADD-NEW-MEMBER
      *         WHEN 4
+     *             PERFORM EDIT-MEMBER-INFO
+     *         WHEN 5
      *             DISPLAY "Exiting to Main Menu..."
      *             GO TO MAIN-PROCEDURE
      *         WHEN OTHER
@@ -164,6 +167,10 @@
 
            ADD-NEW-MEMBER.
            CALL 'AddNewMember' USING USER-CHOICE
+           GO TO MEMBERS-MENU.
+
+           EDIT-MEMBER-INFO.
+           CALL 'EditMember' USING USER-CHOICE
            GO TO MEMBERS-MENU.
 
            LIST-ALL-BOOKS.
