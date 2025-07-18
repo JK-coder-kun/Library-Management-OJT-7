@@ -40,6 +40,15 @@
            05  member_address     PIC X(50).
            05  member_gender      PIC X(1).
            05  member_status      PIC X(8) VALUE "ACTIVE".
+       01  ws-valid-gender       PIC X VALUE "N".
+       01  ws-trimmed-gender     PIC X(1).
+       01  ws-valid-email         PIC X VALUE "N".
+       01  ws-email-trimmed       PIC X(35).
+       01  ws-at-count            PIC 9(2) VALUE 0.
+       01  ws-dot-exist           PIC X VALUE "N".
+       01  ws-i                   PIC 9(2) VALUE 1.
+       01  ws-email-char          PIC X.
+       01  ws-length              PIC 9(2).
 
        01  member_id_disp         PIC 9(5).
        01  last_line              PIC X(200).
@@ -89,12 +98,56 @@
            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
            DISPLAY "* Enter Name       : "
            ACCEPT member_name
+
+
+           PERFORM UNTIL ws-valid-email = "Y"
            DISPLAY "* Enter Email      : "
            ACCEPT member_email
+           MOVE FUNCTION TRIM(member_email) TO ws-email-trimmed
+           MOVE 0 TO ws-at-count
+           MOVE "N" TO ws-dot-exist
+           MOVE 1 TO ws-i
+           MOVE FUNCTION LENGTH(ws-email-trimmed) TO ws-length
+
+           PERFORM VARYING ws-i FROM 1 BY 1 UNTIL ws-i > ws-length
+               MOVE ws-email-trimmed(ws-i:1) TO ws-email-char
+               IF ws-email-char = "@"
+                   ADD 1 TO ws-at-count
+               ELSE IF ws-email-char = "."
+                   MOVE "Y" TO ws-dot-exist
+               END-IF
+           END-PERFORM
+
+           IF ws-at-count = 1 AND ws-dot-exist = "Y"
+               MOVE ws-email-trimmed TO member_email
+               MOVE "Y" TO ws-valid-email
+           ELSE
+               DISPLAY "!! Invalid email. Must contain '@' and '.'"
+           END-IF
+           END-PERFORM
+
+
+
            DISPLAY "* Enter Address    : "
            ACCEPT member_address
-           DISPLAY "* Enter Gender(M/F): "
-           ACCEPT member_gender
+
+
+           PERFORM UNTIL ws-valid-gender = "Y"
+               DISPLAY "* Enter Gender (M/F): "
+               ACCEPT member_gender
+               MOVE FUNCTION UPPER-CASE(FUNCTION TRIM(member_gender))
+               TO ws-trimmed-gender
+
+               IF ws-trimmed-gender = "M" OR ws-trimmed-gender = "F"
+                   MOVE ws-trimmed-gender TO member_gender
+                   MOVE "Y" TO ws-valid-gender
+               ELSE
+                   DISPLAY "!! Invalid Gender. Enter only M or F."
+               END-IF
+           END-PERFORM
+
+
+
            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
            DISPLAY "Enter 1. to create, 0. to exit:  "
            ACCEPT cm_choice
@@ -130,17 +183,17 @@
                STRING
                    member_id_disp        DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
-                   FUNCTION TRIM(member_name)    DELIMITED BY SIZE
+                   member_name    DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
-                   FUNCTION TRIM(member_email)   DELIMITED BY SIZE
+                  member_email   DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
                    '"'                   DELIMITED BY SIZE
-                   FUNCTION TRIM(member_address) DELIMITED BY SIZE
+                   member_address DELIMITED BY SIZE
                    '"'                   DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
-                   FUNCTION TRIM(member_gender)  DELIMITED BY SIZE
+                   member_gender  DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
-                   FUNCTION TRIM(member_status)  DELIMITED BY SIZE
+                   member_status  DELIMITED BY SIZE
                    INTO WS-CSV-LINE
                END-STRING
 
@@ -158,5 +211,10 @@
            ELSE
                DISPLAY "New Member is not created."
            END-IF.
+
+           MOVE 'N' TO ws-valid-email.
+           MOVE 'N' TO ws-dot-exist.
+           MOVE 'N' TO ws-valid-gender.
+
            END PROGRAM AddNewMember.
       *>      STOP RUN.

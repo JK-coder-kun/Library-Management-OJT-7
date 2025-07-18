@@ -31,7 +31,7 @@
            05  member_email      PIC X(35).
            05  member_addr       PIC X(50).
            05  member_gender     PIC X.
-           05  member_flag       PIC X(10).
+           05  member_flag       PIC X(8).
            05 id_to_email        PIC X(70).
            05 gender_n_flag      PIC X(11).
        01  new_member_record .
@@ -40,13 +40,23 @@
            05  new_member_email      PIC X(35).
            05  new_member_addr       PIC X(50).
            05  new_member_gender     PIC X.
-           05  new_member_flag       PIC X(10).
+           05  new_member_flag       PIC X(8).
+       01  ws-valid-email         PIC X VALUE "N".
+       01  ws-email-trimmed       PIC X(35).
+       01  ws-at-count            PIC 9(2) VALUE 0.
+       01  ws-dot-exist           PIC X VALUE "N".
+       01  ws-i                   PIC 9(2) VALUE 1.
+       01  ws-length              PIC 9(2).
+       01  ws-valid-gender        PIC X VALUE 'N'.
+
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
+
        PROCEDURE DIVISION USING USER-CHOICE.
            PERFORM MAIN-PROCEDURE
            EXIT PROGRAM.
            STOP RUN.
+
        MAIN-PROCEDURE.
             DISPLAY "Please, Enter Member ID To Update:"
             ACCEPT  search_member_id
@@ -118,21 +128,56 @@
            IF new_member_name = SPACES THEN
                MOVE member_name TO new_member_name
            END-IF
-           DISPLAY "Enter New Email (or press ENTER to skip): "
-           ACCEPT new_member_email
-           IF new_member_email = SPACES THEN
-               MOVE member_email TO new_member_email
-           END-IF
+
+           PERFORM UNTIL ws-valid-email = "Y"
+               DISPLAY "Enter New Email (or press ENTER to skip): "
+               ACCEPT new_member_email
+               IF new_member_email = SPACES THEN
+                   MOVE member_email TO new_member_email
+                   MOVE "Y" TO ws-valid-email
+               ELSE
+              MOVE FUNCTION TRIM(new_member_email) TO ws-email-trimmed
+                   MOVE 0 TO ws-at-count
+                   MOVE "N" TO ws-dot-exist
+                   MOVE 1 TO ws-i
+                   MOVE FUNCTION LENGTH(ws-email-trimmed) TO ws-length
+            PERFORM VARYING ws-i FROM 1 BY 1 UNTIL ws-i > ws-length
+                       MOVE ws-email-trimmed(ws-i:1) TO dummy
+                       IF dummy = "@"
+                           ADD 1 TO ws-at-count
+                       ELSE IF dummy = "."
+                           MOVE "Y" TO ws-dot-exist
+                       END-IF
+                   END-PERFORM
+                   IF ws-at-count = 1 AND ws-dot-exist = "Y"
+                       MOVE ws-email-trimmed TO new_member_email
+                       MOVE "Y" TO ws-valid-email
+                   ELSE
+                   DISPLAY "!! Invalid email. Must contain '@' and '.'"
+                   END-IF
+               END-IF
+           END-PERFORM
+
            DISPLAY "Enter New Address (or press ENTER to skip): "
            ACCEPT new_member_addr
            IF new_member_addr = SPACES THEN
                MOVE member_addr TO new_member_addr
            END-IF
-           DISPLAY "Enter New Gender (or press ENTER to skip): "
+
+       PERFORM UNTIL ws-valid-gender = "Y"
+           DISPLAY "Enter New Gender(or press ENTER to keep current): "
            ACCEPT new_member_gender
            IF new_member_gender = SPACES THEN
                MOVE member_gender TO new_member_gender
+               MOVE "Y" TO ws-valid-gender
+           ELSE
+               IF new_member_gender = "M" OR new_member_gender = "F"
+                   MOVE "Y" TO ws-valid-gender
+               ELSE
+           DISPLAY "Invalid gender. Use M (Male), F (Female)"
+               END-IF
            END-IF
+       END-PERFORM
            DISPLAY "Change Flag (or press ENTER to skip): "
            ACCEPT new_member_flag
            IF new_member_flag = SPACES THEN
@@ -142,19 +187,21 @@
            STRING
                    new_member_id        DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
-                   FUNCTION TRIM(new_member_name)    DELIMITED BY SIZE
+                  new_member_name    DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
-                   FUNCTION TRIM(new_member_email)   DELIMITED BY SIZE
+                   new_member_email   DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
                    '"'                   DELIMITED BY SIZE
-                   FUNCTION TRIM(new_member_addr) DELIMITED BY SIZE
+                   new_member_addr DELIMITED BY SIZE
                    '"'                   DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
-                   FUNCTION TRIM(new_member_gender)  DELIMITED BY SIZE
+                   new_member_gender  DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
-                   FUNCTION TRIM(new_member_flag)  DELIMITED BY SIZE
+                   new_member_flag  DELIMITED BY SIZE
                    INTO members(IDX)
            END-STRING.
-
+       MOVE 'N' TO ws-valid-email
+       MOVE 'N' TO ws-dot-exist
+       MOVE 'N' TO ws-valid-gender.
 
        END PROGRAM EditMember.
