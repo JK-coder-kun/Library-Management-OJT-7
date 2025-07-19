@@ -62,8 +62,12 @@
        01  MAX-FINE-ID      PIC 9(5) VALUE 0.
        01  NEW-FINE-ID      PIC 9(5).
        01  CONFIRM          PIC X.
-
-       PROCEDURE DIVISION.
+       LINKAGE SECTION.
+       01 USER-CHOICE PIC 9(2).
+       PROCEDURE DIVISION USING USER-CHOICE.
+           PERFORM MAIN-PARAGRAPH
+           EXIT PROGRAM.
+       MAIN-PARAGRAPH.
        DISPLAY "Enter Member ID: "
        ACCEPT WS-MEMBER-ID
        DISPLAY "Enter Book ID: "
