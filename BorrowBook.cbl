@@ -220,7 +220,7 @@
               START-DATE DELIMITED BY SIZE ","
               END-DATE DELIMITED BY SIZE ","
               DUE-FLAG DELIMITED BY SIZE ","
-              SPACE DELIMITED BY SIZE
+              "          " DELIMITED BY SIZE
            INTO LOG-REC
        WRITE LOG-REC
        CLOSE LOG-FILE

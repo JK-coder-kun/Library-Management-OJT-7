@@ -1,3 +1,10 @@
+      ******************************************************************
+      * Author:Kaung Khant Nyein
+      * Date: 11.7.2025
+      * Purpose: Borrow a book form library
+      * Tectonics: cobc
+      ******************************************************************
+
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ReturnBook.
 
@@ -15,7 +22,6 @@
        FILE SECTION.
        FD  LOG-FILE.
        01  LOG-REC         PIC X(200).
-       01  TMP-LOG-REC     PIC x(200).
        FD  BOOK-FILE.
        01  BOOK-REC        PIC X(200).
        FD  FINE-FILE.
@@ -37,9 +43,16 @@
        01  IDX              PIC 9(3).
        01  CNT              PIC 9(3) VALUE 0.
        01  BK-CNT           PIC 9(3) VALUE 0.
-       01  FILE-STATUS      PIC X(1).
+       01  TMP-REC          PIC X(200).
+       01  TMP-ID-X         PIC X(5).
+       01  TMP-ID-N         PIC 9(5).
+       01  MAX-FINE-ID      PIC 9(5) VALUE 0.
+       01  NEW-FINE-ID      PIC 9(5).
+       01  CONFIRM          PIC X.
+       01  FILE-END         PIC X VALUE "N".
+
        01  LOG-TABLE.
-           05 LOG-ENTRY OCCURS 1000 TIMES.
+           05 LOG-ENTRY OCCURS 100 TIMES.
                10 TR-ID      PIC X(5).
                10 MB-ID      PIC X(5).
                10 BK-ID      PIC X(5).
@@ -56,18 +69,15 @@
                10 BK-COUNT      PIC 99.
                10 BK-GENRE      PIC X(30).
 
-
-       01  CURR-ID-X        PIC X(5).
-       01  CURR-ID-N        PIC 9(5).
-       01  MAX-FINE-ID      PIC 9(5) VALUE 0.
-       01  NEW-FINE-ID      PIC 9(5).
-       01  CONFIRM          PIC X.
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
        PROCEDURE DIVISION USING USER-CHOICE.
-           PERFORM MAIN-PARAGRAPH
+           PERFORM MAIN-PROCEDURE
            EXIT PROGRAM.
-       MAIN-PARAGRAPH.
+           STOP RUN.
+
+       MAIN-PROCEDURE.
+
        DISPLAY "Enter Member ID: "
        ACCEPT WS-MEMBER-ID
        DISPLAY "Enter Book ID: "
@@ -86,20 +96,21 @@
        SYS-DD DELIMITED BY SIZE
            INTO WS-RETURN-INT
 
+      * Load log.csv into array
        OPEN INPUT LOG-FILE
        PERFORM UNTIL CNT = 100
            READ LOG-FILE
-               AT END
-                   EXIT PERFORM
+               AT END EXIT PERFORM
                NOT AT END
                    ADD 1 TO CNT
                    UNSTRING LOG-REC DELIMITED BY ","
                        INTO TR-ID(CNT) MB-ID(CNT) BK-ID(CNT)
-                 ST-DATE(CNT) ED-DATE(CNT) DUE-FLAG(CNT) RTN-DATE(CNT)
-           END-READ
+                            ST-DATE(CNT) ED-DATE(CNT)
+                            DUE-FLAG(CNT) RTN-DATE(CNT)
        END-PERFORM
        CLOSE LOG-FILE
 
+      * Search for matching record to return
        PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > CNT
            IF MB-ID(IDX) = WS-MEMBER-ID AND
               BK-ID(IDX) = WS-BOOK-ID AND
@@ -111,11 +122,10 @@
                    MOVE ED-DATE(IDX)(7:4) TO SYS-YYYY
                    MOVE ED-DATE(IDX)(1:2) TO SYS-DD
                    MOVE ED-DATE(IDX)(4:2) TO SYS-MM
-                   STRING SYS-YYYY DELIMITED BY SIZE SYS-MM
-                   DELIMITED BY SIZE SYS-DD DELIMITED BY SIZE
+                   STRING SYS-YYYY DELIMITED BY SIZE
+                   SYS-MM DELIMITED BY SIZE
+                   SYS-DD DELIMITED BY SIZE
                        INTO END-INT
-           MOVE FUNCTION INTEGER-OF-DATE(WS-RETURN-INT) TO WS-RETURN-INT
-           MOVE FUNCTION INTEGER-OF-DATE(END-INT) TO END-INT
                    COMPUTE DIFF-DAYS = WS-RETURN-INT - END-INT
                    COMPUTE FINE-AMOUNT = DIFF-DAYS * 1000
                    DISPLAY "Overdue by ", DIFF-DAYS, " days."
@@ -127,17 +137,18 @@
                    END-IF
 
                    OPEN INPUT FINE-FILE
-                   PERFORM UNTIL FILE-STATUS = "Y"
+                   PERFORM UNTIL FILE-END = "Y"
                        READ FINE-FILE
-                           AT END MOVE "Y" TO FILE-STATUS
+                           AT END MOVE "Y" TO FILE-END
                            NOT AT END
-                   UNSTRING FINE-REC DELIMITED BY "," INTO CURR-ID-X
-                               MOVE CURR-ID-X TO CURR-ID-N
-                               IF CURR-ID-N > MAX-FINE-ID
-                                   MOVE CURR-ID-N TO MAX-FINE-ID
-                       END-READ
+                               UNSTRING FINE-REC DELIMITED BY ","
+                               INTO TMP-ID-X
+                               MOVE TMP-ID-X TO TMP-ID-N
+                               IF TMP-ID-N > MAX-FINE-ID
+                                   MOVE TMP-ID-N TO MAX-FINE-ID
                    END-PERFORM
                    CLOSE FINE-FILE
+
                    COMPUTE NEW-FINE-ID = MAX-FINE-ID + 1
                    OPEN EXTEND FINE-FILE
                    STRING NEW-FINE-ID DELIMITED BY SIZE ","
@@ -148,6 +159,8 @@
                        INTO FINE-REC
                    WRITE FINE-REC
                    CLOSE FINE-FILE
+               ELSE
+                   DISPLAY "Book returned on time."
                END-IF
                EXIT PERFORM
            END-IF
@@ -158,20 +171,22 @@
            STOP RUN
        END-IF
 
+      * Write updated log.csv
        OPEN OUTPUT LOG-FILE
        PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > CNT
-           STRING TR-ID(IDX) DELIMITED BY SIZE","
+           STRING TR-ID(IDX) DELIMITED BY SIZE ","
            MB-ID(IDX) DELIMITED BY SIZE ","
            BK-ID(IDX) DELIMITED BY SIZE ","
            ST-DATE(IDX) DELIMITED BY SIZE ","
            ED-DATE(IDX) DELIMITED BY SIZE ","
            DUE-FLAG(IDX) DELIMITED BY SIZE ","
            RTN-DATE(IDX) DELIMITED BY SIZE
-               INTO TMP-LOG-REC
-            WRITE TMP-LOG-REC
+               INTO LOG-REC
+           WRITE LOG-REC
        END-PERFORM
        CLOSE LOG-FILE
 
+      * Load and update book count
        OPEN INPUT BOOK-FILE
        PERFORM UNTIL BK-CNT = 100
            READ BOOK-FILE
@@ -179,9 +194,9 @@
                NOT AT END
                    ADD 1 TO BK-CNT
                    UNSTRING BOOK-REC DELIMITED BY ","
-                       INTO BK-ID-TAB(BK-CNT),BK-NAME(BK-CNT),
-                       BK-AUTHOR(BK-CNT), BK-COUNT(BK-CNT),
-                       BK-GENRE(BK-CNT)
+                       INTO BK-ID-TAB(BK-CNT)
+                       BK-NAME(BK-CNT) BK-AUTHOR(BK-CNT)
+                       BK-COUNT(BK-CNT) BK-GENRE(BK-CNT)
        END-PERFORM
        CLOSE BOOK-FILE
 
@@ -204,5 +219,5 @@
        END-PERFORM
        CLOSE BOOK-FILE
 
-       DISPLAY "Book returned successfully.".
+       DISPLAY "Book return complete. Thank you.".
        END PROGRAM ReturnBook.
