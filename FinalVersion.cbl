@@ -13,8 +13,8 @@
        PROCEDURE DIVISION.
 
       ***************************************************MAIN MENU START
-      *>  INIT-CHECKLOG.
-      *>       CALL 'CheckLog' USING USER-CHOICE.
+       INIT-CHECKLOG.
+            CALL 'CheckLog' USING USER-CHOICE.
 
      * MAIN-PROCEDURE.
      *      DISPLAY "=============================="

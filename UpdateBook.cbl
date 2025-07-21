@@ -143,7 +143,7 @@
 
            IF FOUND-FLAG = 'N'
                DISPLAY "Book ID not found."
-               STOP RUN
+               GO TO ENDER
            END-IF
 
            OPEN OUTPUT BOOK-FILE
@@ -155,5 +155,5 @@
 
            DISPLAY "Book info updated successfully."
            MOVE 'N' TO FOUND-FLAG.
-
+       ENDER.
        END PROGRAM UpdateBook.

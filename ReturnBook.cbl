@@ -133,7 +133,8 @@
                    DISPLAY "Confirm return and pay fine (Y/N)?"
                    ACCEPT CONFIRM
                    IF CONFIRM NOT = "Y"
-                       DISPLAY "Return canceled." STOP RUN
+                       DISPLAY "Return canceled."
+                       GO TO ENDER
                    END-IF
 
                    OPEN INPUT FINE-FILE
@@ -168,7 +169,7 @@
 
        IF FOUND NOT = "Y"
            DISPLAY "No matching record found."
-           STOP RUN
+           GO TO ENDER
        END-IF
 
       * Write updated log.csv
@@ -220,4 +221,5 @@
        CLOSE BOOK-FILE
 
        DISPLAY "Book return complete. Thank you.".
+       ENDER.
        END PROGRAM ReturnBook.

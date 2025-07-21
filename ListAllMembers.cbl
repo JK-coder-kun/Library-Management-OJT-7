@@ -94,6 +94,7 @@
             OPEN INPUT MemberFile.
             IF file-status not = '00' THEN
                 DISPLAY "Error opening File, Status :"file-status
+                GO TO ENDER
             END-IF
             MOVE 'N' TO EOF
             DISPLAY DECOR-LINE"*"
@@ -148,4 +149,5 @@
             CLOSE MemberFile.
             *> STOP RUN.
       ** add other procedures here
+       ENDER.
        END PROGRAM ListAllMembers.

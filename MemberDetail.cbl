@@ -132,7 +132,8 @@
                     END-READ
                 END-PERFORM
                 IF found_flag = 'N' THEN
-                    DISPLAY 'No Member found!'
+                    DISPLAY 'No Member found!'EOF
+                    GO TO ENDER
                 ELSE
                     PERFORM EXTRACT-HISTORY
                 END-IF
@@ -144,7 +145,7 @@
                 IF file_status not = '00' THEN
                     DISPLAY 'Error opening file "log.csv",status:'
                     file_status
-                    EXIT PROGRAM
+                    GO TO ENDER
                 END-IF
                 MOVE 0 TO found_log_counter
                 PERFORM UNTIL EOF='Y'
@@ -192,4 +193,5 @@
 
                END-IF
                CLOSE LogFile.
+       ENDER.
        END PROGRAM MemberDetail.

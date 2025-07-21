@@ -159,11 +159,11 @@
 
        IF FOUND-ID-FLAG = 'N'
            DISPLAY "Book not found."
-       STOP RUN
+       GO TO ENDER
        ELSE
            IF BOOK-AVAILABLE = 'N'
                DISPLAY "Book is currently out of stock."
-        STOP RUN
+       GO TO ENDER
            END-IF
        END-IF
 
@@ -240,4 +240,5 @@
 
        DISPLAY "Book borrowed successfully. Transaction ID: "
        NEW-TRAN-ID.
+       ENDER.
        END PROGRAM BorrowBook.
