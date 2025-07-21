@@ -6,6 +6,8 @@
       *          if book is overdue and not returned
       * Addition( Khant Ko) : Check member ACTIVE Flag and Fixed address not
       *            Display correctly error
+      * Addition( Htay Lwin) : Showing Summary for counts of updated active/inactive members
+      *            and overdue books counts
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. CheckLog.
@@ -69,6 +71,10 @@
        01  id_to_email        PIC X(70).
        01  gender_n_flag      PIC X(11).
        01  dummy PIC X.
+
+       01 CNT-OVERDUE   PIC 9(4) VALUE 0.
+       01 CNT-INACTIVE  PIC 9(4) VALUE 0.
+
 
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
@@ -136,6 +142,7 @@
 
                            IF SYS-DATE-INT > DT-INT
                                MOVE "YES" TO F-DUE(IDX-CNT)
+                               ADD 1 TO CNT-OVERDUE
                            ELSE
                                MOVE "NO " TO F-DUE(IDX-CNT)
                            END-IF
@@ -143,9 +150,17 @@
                            IF F-DUE(IDX-CNT) = "YES"
                               PERFORM VARYING M-IDX FROM 1 BY 1
                                 UNTIL M-IDX > M-COUNT
-                                  IF F-MID(IDX-CNT) = M-ID(M-IDX)
-                                     MOVE "INACTIVE" TO M-FLAG(M-IDX)
-                                     ADD 1 TO M-UNRT-OVCT(M-IDX)
+      *>                             IF F-MID(IDX-CNT) = M-ID(M-IDX)
+      *>                                MOVE "INACTIVE" TO M-FLAG(M-IDX)
+      *>                                ADD 1 TO M-UNRT-OVCT(M-IDX)
+
+                                     IF F-MID(IDX-CNT) = M-ID(M-IDX)
+                                       IF M-FLAG(M-IDX) NOT = "INACTIVE"
+                                        MOVE "INACTIVE" TO M-FLAG(M-IDX)
+                                        ADD 1 TO CNT-INACTIVE
+                                     END-IF
+                                        ADD 1 TO M-UNRT-OVCT(M-IDX)
+
                                   END-IF
                               END-PERFORM
                            END-IF
@@ -193,6 +208,9 @@
                WRITE MEMBER-LINE
            END-PERFORM
            CLOSE MEMBER-FILE
+
+           DISPLAY CNT-OVERDUE " overdue books found, "
+           DISPLAY CNT-INACTIVE " members marked inactive."
 
            GOBACK.
        END PROGRAM CheckLog.
