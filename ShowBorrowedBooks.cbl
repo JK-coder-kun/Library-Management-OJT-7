@@ -95,7 +95,7 @@
            05 FILLER           PIC X(5)  VALUE SPACES.
            05 HDR-DUE-FLAG     PIC X(10) VALUE "DUE FLAG".
 
-       01 DECOR-LINE PIC X(80) VALUE ALL "*-".
+       01 DECOR-LINE PIC X(125) VALUE ALL "*-".
 
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
@@ -114,6 +114,7 @@
                 EXIT PROGRAM
             END-IF
             PERFORM UNTIL EOF = 'Y'
+               MOVE 0 TO non_space_count
                READ LogFile
                    AT END
                        MOVE 'Y' TO EOF

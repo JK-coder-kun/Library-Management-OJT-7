@@ -4,6 +4,8 @@
       * Purpose: Update due_flag only if return_date is blank
       *          and set member_flag to INACTIVE
       *          if book is overdue and not returned
+      * Addition( Khant Ko) : Check member ACTIVE Flag and Fixed address not
+      *            Display correctly error
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. CheckLog.
@@ -56,6 +58,7 @@
               10 M-ADDRESS  PIC X(50).
               10 M-GENDER   PIC X(1).
               10 M-FLAG     PIC X(8).
+              10 M-UNRT-OVCT PIC 99 VALUE 0.
 
        01  M-IDX     PIC 9(3) VALUE 1.
        01  M-COUNT   PIC 9(3) VALUE 0.
@@ -85,6 +88,7 @@
                    AT END
                        MOVE 'Y' TO FLG-EOF
                    NOT AT END
+                       MOVE 0 TO Q-CNT
                        INSPECT MEMBER-LINE TALLYING Q-CNT FOR ALL '"'
                        IF Q-CNT > 0 THEN
                            UNSTRING MEMBER-LINE DELIMITED BY '"'
@@ -100,6 +104,7 @@
                                 M-EMAIL(M-IDX), M-ADDRESS(M-IDX),
                                 M-GENDER(M-IDX), M-FLAG(M-IDX)
                        END-IF
+
                        ADD 1 TO M-IDX
                        ADD 1 TO M-COUNT
                END-READ
@@ -140,6 +145,7 @@
                                 UNTIL M-IDX > M-COUNT
                                   IF F-MID(IDX-CNT) = M-ID(M-IDX)
                                      MOVE "INACTIVE" TO M-FLAG(M-IDX)
+                                     ADD 1 TO M-UNRT-OVCT(M-IDX)
                                   END-IF
                               END-PERFORM
                            END-IF
@@ -171,6 +177,9 @@
            OPEN OUTPUT MEMBER-FILE
            PERFORM VARYING M-IDX FROM 1 BY 1
              UNTIL M-IDX > M-COUNT
+               IF M-UNRT-OVCT(M-IDX) = 0 THEN
+                   MOVE 'ACTIVE' TO M-FLAG(M-IDX)
+               END-IF
                STRING
                    M-ID(M-IDX) DELIMITED BY SIZE ","
                    M-NAME(M-IDX) DELIMITED BY SIZE ","
