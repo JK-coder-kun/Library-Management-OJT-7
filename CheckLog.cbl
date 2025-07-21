@@ -209,8 +209,8 @@
            END-PERFORM
            CLOSE MEMBER-FILE
 
-           DISPLAY CNT-OVERDUE " overdue books found, "
-           DISPLAY CNT-INACTIVE " members marked inactive."
+      *>      DISPLAY CNT-OVERDUE " overdue books found, "
+      *>      DISPLAY CNT-INACTIVE " members marked inactive."
 
            GOBACK.
        END PROGRAM CheckLog.
