@@ -65,6 +65,7 @@
                 DISPLAY "Error opening File, Status :"file_status
             END-IF
             MOVE 'N' TO EOF
+            MOVE 'N' TO found_flag
             SET IDX TO 0
             PERFORM UNTIL EOF = 'Y'
                READ MemberFile

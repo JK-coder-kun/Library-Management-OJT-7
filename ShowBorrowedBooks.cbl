@@ -107,7 +107,9 @@
        MAIN-PROCEDURE.
             SET IDX TO 1
             SET IDX DOWN BY 1
-
+            MOVE 'N' TO EOF
+            MOVE 0 TO total_not_return
+            MOVE 0 TO total_due
             OPEN INPUT LogFile
             IF file_status not = '00' THEN
                 DISPLAY "Error Opening File, Status: "file_status

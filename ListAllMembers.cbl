@@ -80,7 +80,7 @@
            05 FILLER         PIC X(6)  VALUE "ender ".
            05 FILLER         PIC X(2)  VALUE "| ".
            05 FILLER         PIC X(10) VALUE " Flag    ".
-       01 DECOR-LINE PIC X(134) VALUE ALL "*-".
+       01 DECOR-LINE PIC X(137) VALUE ALL "*-".
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
        PROCEDURE DIVISION USING USER-CHOICE.
@@ -97,10 +97,10 @@
                 GO TO ENDER
             END-IF
             MOVE 'N' TO EOF
-            DISPLAY DECOR-LINE"*"
+            DISPLAY DECOR-LINE
 
             DISPLAY DISPLAY-HEADER
-            DISPLAY DECOR-LINE "*"
+            DISPLAY DECOR-LINE
             MOVE 0 TO counter
             PERFORM UNTIL EOF = 'Y'
                READ MemberFile
@@ -145,7 +145,7 @@
                    END-IF
                END-READ
             END-PERFORM.
-            DISPLAY DECOR-LINE"*"
+            DISPLAY DECOR-LINE
             CLOSE MemberFile.
             *> STOP RUN.
       ** add other procedures here

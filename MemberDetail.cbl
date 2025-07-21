@@ -34,6 +34,7 @@
        01 search_member_id PIC 9(5).
        01 log_member_id PIC 9(5).
        01 found_log_counter PIC 999 VALUE 0.
+       01 overdue_unreturn_books PIC 99 VALUE 0.
        01 EOF PIC X value "N".
        01 found_flag PIC X VALUE "N".
        01 book_found_flag PIC X VALUE "N".
@@ -100,7 +101,8 @@
             OPEN INPUT MemberFile
                 DISPLAY "Enter Member ID to Search: "
                 ACCEPT search_member_id
-
+                MOVE 'N' TO EOF
+                MOVE 'N' TO found_flag
                 PERFORM UNTIL EOF="Y" or found_flag = 'Y'
                    READ MemberFile
                        AT END MOVE 'Y' TO EOF
@@ -132,7 +134,7 @@
                     END-READ
                 END-PERFORM
                 IF found_flag = 'N' THEN
-                    DISPLAY 'No Member found!'EOF
+                    DISPLAY 'No Member found!'
                     GO TO ENDER
                 ELSE
                     PERFORM EXTRACT-HISTORY
@@ -148,6 +150,8 @@
                     GO TO ENDER
                 END-IF
                 MOVE 0 TO found_log_counter
+                MOVE 0 TO overdue_unreturn_books
+                MOVE 'N' TO header_displayed
                 PERFORM UNTIL EOF='Y'
                    READ LogFile
                        AT END MOVE 'Y' TO EOF
@@ -169,6 +173,10 @@
                            UNSTRING log DELIMITED BY ','
                            INTO log_id, log_member_id,book_id
                            ,start_date,end_date,due_flag, return_date
+                           IF FUNCTION TRIM(return_date)=SPACE AND
+                               due_flag = 'YES' THEN
+                               ADD 1 TO overdue_unreturn_books
+                           END-IF
                            OPEN INPUT BookFile
                                PERFORM UNTIL book_found_flag="Y"
                                READ BookFile
@@ -190,7 +198,13 @@
                END-PERFORM
                IF found_log_counter = 0 THEN
                    DISPLAY "No History Found!"
-
+               ELSE
+                   DISPLAY "     "decor_line
+                   DISPLAY ""
+                   DISPLAY "Total History Made By Member: "
+                   found_log_counter
+                   DISPLAY "Total Unreturned Books That are Overdue: "
+                   overdue_unreturn_books
                END-IF
                CLOSE LogFile.
        ENDER.
