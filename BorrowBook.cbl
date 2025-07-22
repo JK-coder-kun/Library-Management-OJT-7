@@ -2,7 +2,8 @@
       * Author:Kaung Khant Nyein
       * Date: 11.7.2025
       * Purpose: Borrow a book form library
-      * Tectonics: cobc
+      * (Addition Khant Ko) :Fix Accepting all issues regardless of
+      * remaining book count and member status
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. BorrowBook.
@@ -90,6 +91,9 @@
 
 
        OPEN INPUT MEMBER-FILE
+       MOVE 'N' TO FILE-END
+       MOVE 'N' TO VALID-FLAG
+       MOVE 'N' TO FOUND-MEMBER
        PERFORM UNTIL FILE-END = 'Y'
            READ MEMBER-FILE
                AT END
@@ -122,14 +126,15 @@
 
        IF VALID-FLAG NOT = 'Y'
            DISPLAY "Invalid member or inactive status."
-           STOP RUN
+           EXIT PROGRAM
        END-IF
 
 
        MOVE 1 TO BK-IDX
        MOVE 0 TO BK-TOTAL
        MOVE 'N' TO FILE-END
-
+       MOVE 'N' TO FOUND-ID-FLAG
+       MOVE 'N' TO BOOK-AVAILABLE
        OPEN INPUT BOOK-FILE
        PERFORM UNTIL FILE-END = 'Y'
        READ BOOK-FILE
@@ -159,10 +164,11 @@
 
        IF FOUND-ID-FLAG = 'N'
            DISPLAY "Book not found."
-       GO TO ENDER
+           GO TO ENDER
        ELSE
            IF BOOK-AVAILABLE = 'N'
                DISPLAY "Book is currently out of stock."
+               EXIT PROGRAM
        GO TO ENDER
            END-IF
        END-IF

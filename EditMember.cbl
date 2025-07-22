@@ -121,7 +121,7 @@
            DISPLAY "Current Member Email: "member_email
            DISPLAY "Current Member Address: "member_addr
            DISPLAY "Current Member Gender: "member_gender
-           DISPLAY "Current Member Flag: "member_flag
+           DISPLAY "Current Member Status: "member_flag
            DISPLAY "-----------------------------------------"
            MOVE member_id TO new_member_id
            DISPLAY "Enter New Name (or press ENTER to skip): "
@@ -179,7 +179,7 @@
                END-IF
            END-IF
        END-PERFORM
-           DISPLAY "Change Flag (or press ENTER to skip): "
+           DISPLAY "Change Member Status (or press ENTER to skip): "
            ACCEPT new_member_flag
            IF new_member_flag = SPACES THEN
                MOVE member_flag TO new_member_flag

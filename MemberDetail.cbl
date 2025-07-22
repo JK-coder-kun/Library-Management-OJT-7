@@ -35,6 +35,7 @@
        01 log_member_id PIC 9(5).
        01 found_log_counter PIC 999 VALUE 0.
        01 overdue_unreturn_books PIC 99 VALUE 0.
+       01 disp_count PIC ZZ9.
        01 EOF PIC X value "N".
        01 found_flag PIC X VALUE "N".
        01 book_found_flag PIC X VALUE "N".
@@ -177,6 +178,7 @@
                                due_flag = 'YES' THEN
                                ADD 1 TO overdue_unreturn_books
                            END-IF
+                           MOVE 'N' TO book_found_flag
                            OPEN INPUT BookFile
                                PERFORM UNTIL book_found_flag="Y"
                                READ BookFile
@@ -200,11 +202,13 @@
                    DISPLAY "No History Found!"
                ELSE
                    DISPLAY "     "decor_line
-                   DISPLAY ""
+                   DISPLAY " "
+                   MOVE found_log_counter TO disp_count
                    DISPLAY "Total History Made By Member: "
-                   found_log_counter
+                   disp_count
+                   MOVE overdue_unreturn_books TO disp_count
                    DISPLAY "Total Unreturned Books That are Overdue: "
-                   overdue_unreturn_books
+                   disp_count
                END-IF
                CLOSE LogFile.
        ENDER.
