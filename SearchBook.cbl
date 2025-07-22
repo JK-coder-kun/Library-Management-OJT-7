@@ -3,7 +3,7 @@
       * Purpose: Search Books (Subprogram)
       * To fix : OK
       * Modified by HL(7/10/25)
-      * Tectonics: cobc
+      * Modified by KK(7/22/25)
       ******************************************************************
        IDENTIFICATION DIVISION.
       *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -37,11 +37,11 @@
 
        01 BOOK-DETAIL.
            05 BOOK-ID             PIC X(5).
-           05 FILLER              PIC X(2) VALUE SPACES.
+           05 FILLER              PIC X(7) VALUE SPACES.
            05 BOOK-NAME           PIC X(30).
-           05 FILLER              PIC X(2) VALUE SPACES.
+           05 FILLER              PIC X(3) VALUE SPACES.
            05 BOOK-AUTHOR         PIC X(30).
-           05 FILLER              PIC X(2) VALUE SPACES.
+           05 FILLER              PIC X(3) VALUE SPACES.
            05 BOOK-COUNT          PIC 9(2).
            05 FILLER              PIC X(5) VALUE SPACES.
            05 BOOK-GENRE          PIC X(30).
@@ -51,17 +51,17 @@
            88 NO-BOOK-MATCH       VALUE "N".
 
        01 found_flag PIC X value 'N'.
-       01 HEADER-LINE             PIC X(100) VALUE ALL '-'.
+       01 HEADER-LINE             PIC X(96) VALUE ALL '-'.
 
        01 BOOK-HEADER.
            05 FILLER              PIC X(7) VALUE "BOOK ID".
-           05 FILLER              PIC X(1)  VALUE SPACES.
-           05 FILLER              PIC X(30) VALUE "BOOK NAME".
-           05 FILLER              PIC X(1)  VALUE SPACES.
-           05 FILLER              PIC X(25) VALUE "AUTHOR".
-           05 FILLER              PIC X(2)  VALUE SPACES.
-           05 FILLER              PIC X(5)  VALUE "COUNT".
            05 FILLER              PIC X(5)  VALUE SPACES.
+           05 FILLER              PIC X(30) VALUE "BOOK NAME".
+           05 FILLER              PIC X(3)  VALUE SPACES.
+           05 FILLER              PIC X(30) VALUE "AUTHOR".
+           05 FILLER              PIC X(3)  VALUE SPACES.
+           05 FILLER              PIC X(5)  VALUE "COUNT".
+           05 FILLER              PIC X(2)  VALUE SPACES.
            05 FILLER              PIC X(15) VALUE "GENRE".
 
        LINKAGE SECTION.
@@ -71,11 +71,12 @@
       *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
            PERFORM MAIN-PARAGRAPH
            EXIT PROGRAM.
+           STOP RUN.
 
        MAIN-PARAGRAPH.
            MOVE SPACES TO SEARCH-CRITERIA
            SET NO-BOOK-MATCH TO TRUE.
-
+           MOVE 'N' TO found_flag
            DISPLAY " "
            DISPLAY "SEARCH BOOKS BY CRITERIA (leave blank to skip any):"
            DISPLAY "Enter Book ID: "     ACCEPT SC-ID
@@ -91,9 +92,11 @@
                EXIT PARAGRAPH
            END-IF
 
+           DISPLAY "======================"
+           DISPLAY "    SEARCH RESULTS"
+           DISPLAY "======================"
+      *>      DISPLAY HEADER-LINE
            DISPLAY " "
-           DISPLAY "SEARCH RESULTS:"
-           DISPLAY HEADER-LINE
            DISPLAY BOOK-HEADER
            DISPLAY HEADER-LINE
 

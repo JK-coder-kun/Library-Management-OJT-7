@@ -42,10 +42,10 @@
            05 book_genre           PIC X(30).
 
        01 BOOK-DISPLAY-LINE.
-           05 FILLER                PIC X(3)  VALUE SPACES.
+      *>      05 FILLER                PIC X(3)  VALUE SPACES.
            05 DISP-BOOK-ID          PIC X(5).
-           05 FILLER                PIC X(5)  VALUE SPACES.
-           05 DISP-BOOK-NAME        PIC X(27).
+           05 FILLER                PIC X(7)  VALUE SPACES.
+           05 DISP-BOOK-NAME        PIC X(28).
            05 FILLER                PIC X(2)  VALUE SPACES.
            05 DISP-BOOK-AUTHOR      PIC X(25).
            05 FILLER                PIC X(1)  VALUE SPACES.
@@ -71,14 +71,14 @@
            ELSE
                DISPLAY " "
                DISPLAY "LIST OF ALL BOOKS"
-               DISPLAY DECOR-LINE "*"
+               DISPLAY DECOR-LINE
                DISPLAY BOOK-HEADER
-               DISPLAY DECOR-LINE "*"
+               DISPLAY DECOR-LINE
 
                PERFORM UNTIL BOOK-STATUS = '10'
                    READ BOOK-FILE
                        AT END
-                           DISPLAY " "
+                           DISPLAY DECOR-LINE
                        NOT AT END
                            UNSTRING BOOK-RECORD DELIMITED BY ','
                                INTO book_id, book_name, book_author,
@@ -94,7 +94,7 @@
 
                    END-READ
                END-PERFORM
-               DISPLAY DECOR-LINE "*"
+      *>          DISPLAY DECOR-LINE
                CLOSE BOOK-FILE
            END-IF
            GOBACK.
