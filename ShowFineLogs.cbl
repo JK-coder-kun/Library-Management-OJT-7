@@ -3,6 +3,7 @@
       * Date:7/16/2025
       * Purpose: Display the logs of fine members
       * Tectonics: cobc
+      * Fix: Zero suppression in the numerical values
       ******************************************************************
        IDENTIFICATION DIVISION.
       *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -80,10 +81,13 @@
            05 FILLER PIC X(18)  VALUE "Member Name       ".
            05 FILLER PIC X(30)  VALUE "Book Name                    ".
            05 FILLER PIC X(12)  VALUE "Due Days    ".
-           05 FILLER PIC X(8)   VALUE "Amount  ".
+           05 FILLER PIC X(8)   VALUE " Amount".
 
 
        01 deco-line           PIC x(77) value all "*-".
+       01 f_due_days_disp     PIC Z(3).
+       01 f_amount_disp       PIC Z(6).
+
 
        LINKAGE SECTION.
       *-----------------------
@@ -117,12 +121,16 @@
                        PERFORM FETCH-MEMBER-NAME
                        PERFORM FETCH-BOOK-NAME
 
-                       DISPLAY f_fine_id "    "
-                               match_member_name(1:18)
-                               match_book_name(1:30)
-                               f_due_days "         "
-                               f_amount
+                       MOVE f_due_days TO f_due_days_disp
+                       MOVE f_amount   TO f_amount_disp
 
+                          DISPLAY f_fine_id "    "
+                                match_member_name(1:18)
+                                match_book_name(1:30)
+                                "  "
+                                f_due_days_disp
+                                "        "
+                                f_amount_disp
                END-READ
            END-PERFORM
 

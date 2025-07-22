@@ -6,17 +6,23 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        PROGRAM-ID. SearchBook.
+
        ENVIRONMENT DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        CONFIGURATION SECTION.
        INPUT-OUTPUT SECTION.
+
        FILE-CONTROL.
            SELECT BOOK-FILE ASSIGN TO "../books.csv"
                ORGANIZATION IS LINE SEQUENTIAL
                FILE STATUS IS BOOK-STATUS.
 
        DATA DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        FILE SECTION.
+      *> -----------------
        FD BOOK-FILE.
        01 BOOK-RECORD             PIC X(200).
 
@@ -43,29 +49,32 @@
        01 MATCH-FOUND             PIC X VALUE "N".
            88 BOOK-MATCH-FOUND    VALUE "Y".
            88 NO-BOOK-MATCH       VALUE "N".
+
        01 found_flag PIC X value 'N'.
        01 HEADER-LINE             PIC X(100) VALUE ALL '-'.
+
        01 BOOK-HEADER.
-           05 FILLER              PIC X(10) VALUE "BOOK ID".
-           05 FILLER              PIC X(2)  VALUE SPACES.
+           05 FILLER              PIC X(7) VALUE "BOOK ID".
+           05 FILLER              PIC X(1)  VALUE SPACES.
            05 FILLER              PIC X(30) VALUE "BOOK NAME".
-           05 FILLER              PIC X(2)  VALUE SPACES.
+           05 FILLER              PIC X(1)  VALUE SPACES.
            05 FILLER              PIC X(25) VALUE "AUTHOR".
            05 FILLER              PIC X(2)  VALUE SPACES.
            05 FILLER              PIC X(5)  VALUE "COUNT".
            05 FILLER              PIC X(5)  VALUE SPACES.
            05 FILLER              PIC X(15) VALUE "GENRE".
+
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
+
        PROCEDURE DIVISION USING USER-CHOICE.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
            PERFORM MAIN-PARAGRAPH
            EXIT PROGRAM.
-       MAIN-PARAGRAPH.
 
+       MAIN-PARAGRAPH.
            MOVE SPACES TO SEARCH-CRITERIA
            SET NO-BOOK-MATCH TO TRUE.
-
-          *> -----------------
 
            DISPLAY " "
            DISPLAY "SEARCH BOOKS BY CRITERIA (leave blank to skip any):"
@@ -96,10 +105,12 @@
                            INTO BOOK-ID, BOOK-NAME, BOOK-AUTHOR,
                                 BOOK-COUNT, BOOK-GENRE
                        PERFORM CHECK-MATCH
+
                        IF BOOK-MATCH-FOUND
                            DISPLAY BOOK-DETAIL
                            SET BOOK-MATCH-FOUND TO TRUE
                        END-IF
+
                END-READ
            END-PERFORM
 
@@ -110,8 +121,7 @@
            DISPLAY HEADER-LINE
            CLOSE BOOK-FILE.
 
-          *> -----------------
-
+      *-----------------------------------------------------------------
       *>      STOP RUN.
 
        CHECK-MATCH.
