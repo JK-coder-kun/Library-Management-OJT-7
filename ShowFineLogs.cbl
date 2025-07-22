@@ -95,50 +95,52 @@
 
        PROCEDURE DIVISION USING USER-CHOICE.
       *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       MAIN-PROCEDURE.
+           PERFORM MAIN-PROCEDURE
+           EXIT PROGRAM
+       STOP RUN.
 
+      *-----------------------------------------------------------------
+
+       MAIN-PROCEDURE.
+           MOVE 'N' TO EOF-Fine
            DISPLAY " "
            DISPLAY "FINED MEMBERS' LOGS"
            DISPLAY "==================="
            DISPLAY " "
            DISPLAY DISPLAY-HEADER
 
-           OPEN INPUT FineFile LogFile MemberFile BookFile
+               OPEN INPUT FineFile LogFile MemberFile BookFile
            DISPLAY deco-line
 
-           PERFORM UNTIL EOF-Fine = 'Y'
-               READ FineFile
-                   AT END
-                       MOVE 'Y' TO EOF-Fine
-                   NOT AT END
+               PERFORM UNTIL EOF-Fine = 'Y'
+            READ FineFile
+                AT END
+                    MOVE 'Y' TO EOF-Fine
+                NOT AT END
 
-                       UNSTRING FineRecord DELIMITED BY ","
-                           INTO f_fine_id, f_tran_id, f_member_id,
-                                f_due_days, f_amount
-                       END-UNSTRING
+                        UNSTRING FineRecord DELIMITED BY ","
+                        INTO f_fine_id, f_tran_id, f_member_id,
+                             f_due_days, f_amount
 
-                       PERFORM FETCH-LOG-DETAILS
-                       PERFORM FETCH-MEMBER-NAME
-                       PERFORM FETCH-BOOK-NAME
+                        PERFORM FETCH-LOG-DETAILS
+                    PERFORM FETCH-MEMBER-NAME
+                    PERFORM FETCH-BOOK-NAME
 
-                       MOVE f_due_days TO f_due_days_disp
-                       MOVE f_amount   TO f_amount_disp
+                        MOVE f_due_days TO f_due_days_disp
+                    MOVE f_amount   TO f_amount_disp
 
-                          DISPLAY f_fine_id "    "
-                                match_member_name(1:18)
-                                match_book_name(1:30)
-                                "  "
-                                f_due_days_disp
-                                "        "
-                                f_amount_disp
-               END-READ
+                        DISPLAY f_fine_id "    "
+                            match_member_name(1:18)
+                            match_book_name(1:30)
+                            "  "
+                            f_due_days_disp
+                            "        "
+                            f_amount_disp
+            END-READ
            END-PERFORM
 
-           DISPLAY deco-line
-           CLOSE FineFile LogFile MemberFile BookFile
-
-           EXIT PROGRAM
-           STOP RUN.
+               DISPLAY deco-line
+           CLOSE FineFile LogFile MemberFile BookFile.
 
       *-----------------------------------------------------------------
        FETCH-LOG-DETAILS.

@@ -83,48 +83,52 @@
 
        PROCEDURE DIVISION USING USER-CHOICE.
       *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+           PERFORM MAIN-PROCEDURE
+           EXIT PROGRAM
+       STOP RUN.
+
+
        MAIN-PROCEDURE.
 
-           DISPLAY " "
-           DISPLAY " Issuance Records "
-           DISPLAY "=================="
-           DISPLAY " "
-           DISPLAY DISPLAY-HEADER
+               MOVE 'N' TO EOF-Log
+               DISPLAY " "
+               DISPLAY " Issuance Records "
+               DISPLAY "=================="
+               DISPLAY " "
+               DISPLAY DISPLAY-HEADER
 
-           OPEN INPUT LogFile MemberFile BookFile
-           READ LogFile
-               AT END MOVE 'Y' TO EOF-Log
-           END-READ
-
-           DISPLAY deco-line
-
-           PERFORM UNTIL EOF-Log = 'Y'
-               UNSTRING LogRecord DELIMITED BY ","
-                   INTO l_tran_id, l_member_id, l_book_id,
-                        l_start_date, l_end_date, l_due_flag,
-                        l_return_date
-               END-UNSTRING
-
-               PERFORM FETCH-MEMBER-NAME
-               PERFORM FETCH-BOOK-NAME
-
-
-               DISPLAY l_tran_id "    "
-                       match_member_name(1:18)
-                       match_book_name(1:30)
-                       l_start_date " " " "
-                       l_due_flag " "
-                       l_return_date
+               OPEN INPUT LogFile MemberFile BookFile
 
                READ LogFile
                    AT END MOVE 'Y' TO EOF-Log
                END-READ
-           END-PERFORM
-           DISPLAY deco-line
-           CLOSE LogFile MemberFile BookFile
 
-           EXIT PROGRAM
-           STOP RUN.
+               DISPLAY deco-line
+
+               PERFORM UNTIL EOF-Log = 'Y'
+                   UNSTRING LogRecord DELIMITED BY ","
+                       INTO l_tran_id, l_member_id, l_book_id,
+                             l_start_date, l_end_date, l_due_flag,
+                             l_return_date
+                   END-UNSTRING
+
+                    PERFORM FETCH-MEMBER-NAME
+                    PERFORM FETCH-BOOK-NAME
+
+                        DISPLAY l_tran_id "    "
+                            match_member_name(1:18)
+                            match_book_name(1:30)
+                            l_start_date " " " "
+                            l_due_flag " "
+                            l_return_date
+
+                        READ LogFile
+                        AT END MOVE 'Y' TO EOF-Log
+                    END-READ
+               END-PERFORM
+
+               DISPLAY deco-line
+               CLOSE LogFile MemberFile BookFile.
 
       *-----------------------------------------------------------------      *-----------------------
        FETCH-MEMBER-NAME.

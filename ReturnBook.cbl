@@ -69,6 +69,8 @@
                10 BK-COUNT      PIC 99.
                10 BK-GENRE      PIC X(30).
 
+       01  already_read         PIC X value "N".
+
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
        PROCEDURE DIVISION USING USER-CHOICE.
@@ -110,13 +112,24 @@
        END-PERFORM
        CLOSE LOG-FILE
 
+       MOVE "N" TO already_read
+
       * Search for matching record to return
        PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > CNT
+      *>      IF MB-ID(IDX) = WS-MEMBER-ID AND
+      *>         BK-ID(IDX) = WS-BOOK-ID AND
+      *>         RTN-DATE(IDX) = SPACES
+
+
            IF MB-ID(IDX) = WS-MEMBER-ID AND
-              BK-ID(IDX) = WS-BOOK-ID AND
-              RTN-DATE(IDX) = SPACES
-               MOVE WS-RETURN-DATE TO RTN-DATE(IDX)
-               MOVE "Y" TO FOUND
+               BK-ID(IDX) = WS-BOOK-ID
+               IF RTN-DATE(IDX) NOT = SPACES
+                  MOVE "Y" TO already_read
+
+               ELSE
+                   MOVE WS-RETURN-DATE TO RTN-DATE(IDX)
+                   MOVE "Y" TO FOUND
+                   MOVE "N" TO already_read
 
                IF DUE-FLAG(IDX) = "YES"
                    MOVE ED-DATE(IDX)(7:4) TO SYS-YYYY
@@ -166,6 +179,14 @@
                EXIT PERFORM
            END-IF
        END-PERFORM
+
+
+       IF already_read = "Y"
+            DISPLAY "You have already returned the book."
+            GO TO ENDER
+       END-IF
+
+
 
        IF FOUND NOT = "Y"
            DISPLAY "No matching record found."
