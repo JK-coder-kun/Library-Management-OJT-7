@@ -1,8 +1,11 @@
-20001,The Great Gatsby              ,F. Scott Fitzgerald           ,05,Fiction
-20002,The Great Big                 ,Khant Ko                      ,01,Action
-20003,To Kill a Mockingbird         ,Harper Lee                    ,03,Classic
-20004,The Hobbit                    ,J.R.R. Tolkien                ,00,Fantasy
-20005,The Alchemist                 ,Paulo Coelho                  ,06,Philosophical
-20006,Mu La A Sa                    ,Min Zaw                       ,02,Cartoon
-20007,Min Phyu Myan Myan Pyaw       ,Min TheinKha                  ,04,Action
-20008,Return of Hitler              ,Moskov NaKorh                 ,08,History
+20001,The Great Gatsby              ,F. Scott Fitzgerald           ,5,Fiction
+20002,The Great Big                 ,Khant Ko                      ,1,Action
+20003,To Kill a Mockingbird         ,Harper Lee                    ,3,Classic
+20004,The Hobbit                    ,J.R.R. Tolkien                ,0,Fantasy
+20005,The Alchemist                 ,Paulo Coelho                  ,6,Philosophical
+20006,Mu La A Sa                    ,Min Zaw                       ,2,Cartoon
+20007,Min Phyu Mhan Mhan Pyaw       ,Min TheinKha                  ,4,Action
+20008,Return of Hitler              ,Moskov NaKorh                 ,8,History
+20009,The Monk who sold his Ferrari,Robin Sharma,10,Fiction
+20010,Chicken Soup for The Soul,-,10,Inspiration
+20011,Wuthering Heights,Emily Bronte,10,Gothic Novel

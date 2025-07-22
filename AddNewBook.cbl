@@ -5,21 +5,26 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        PROGRAM-ID. AddNewBook.
 
        ENVIRONMENT DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        INPUT-OUTPUT SECTION.
+      *-----------------------
        FILE-CONTROL.
            SELECT BookFile ASSIGN TO '../books.csv'
                ORGANIZATION IS LINE SEQUENTIAL
                ACCESS MODE IS SEQUENTIAL.
 
        DATA DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        FILE SECTION.
        FD  BookFile.
-       01  BookRecord               PIC X(200).
+       01  BookRecord              PIC X(200).
 
        WORKING-STORAGE SECTION.
+      *-----------------------
        01  book_records.
            05  book_id             PIC 9(5).
            05  book_name           PIC X(30).
@@ -37,13 +42,16 @@
        01  ws-num-only             PIC 9(2) VALUE 0.
 
        LINKAGE SECTION.
+      *-----------------------
        01 USER-CHOICE PIC 9(2).
 
        PROCEDURE DIVISION USING USER-CHOICE.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
            PERFORM MAIN-PROCEDURE
            EXIT PROGRAM.
            STOP RUN.
 
+      *-----------------------------------------------------------------
        MAIN-PROCEDURE.
            OPEN INPUT BookFile
            PERFORM UNTIL eof-flag = 'Y'
@@ -56,6 +64,7 @@
                END-READ
            END-PERFORM
            CLOSE BookFile
+
 
            ADD 1 TO last-book-id
            MOVE last-book-id TO book_id
@@ -115,17 +124,21 @@
                    FUNCTION TRIM(book_genre)   DELIMITED BY SIZE
                    INTO ws-book-line
                END-STRING
+
                MOVE ws-book-line TO BookRecord
                WRITE BookRecord
                CLOSE BookFile
 
                DISPLAY "*------------------------------------------*"
                DISPLAY "Book successfully added to books.csv."
+               DISPLAY "          "
                DISPLAY "Book ID   : " book_id
                DISPLAY "Book Name : " book_name
                DISPLAY "*------------------------------------------*"
+
            ELSE
                DISPLAY "Book entry cancelled."
            END-IF.
            MOVE 'N' TO ws-valid-count.
+      *-----------------------------------------------------------------
            END PROGRAM AddNewBook.
