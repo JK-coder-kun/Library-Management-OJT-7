@@ -10,7 +10,7 @@
       *            and overdue books counts
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CheckLog.
+       PROGRAM-ID. CheckLog IS INITIAL.
 
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
@@ -88,6 +88,7 @@
       * Read all member records into memory
            MOVE 'N' TO FLG-EOF
            MOVE 1 TO M-IDX
+           MOVE 0 TO M-COUNT
            OPEN INPUT MEMBER-FILE
            PERFORM UNTIL FLG-EOF = 'Y'
                READ MEMBER-FILE
@@ -110,15 +111,18 @@
                                 M-EMAIL(M-IDX), M-ADDRESS(M-IDX),
                                 M-GENDER(M-IDX), M-FLAG(M-IDX)
                        END-IF
-
+                       MOVE 0 TO M-UNRT-OVCT(M-IDX)
                        ADD 1 TO M-IDX
                        ADD 1 TO M-COUNT
                END-READ
            END-PERFORM
+
            CLOSE MEMBER-FILE
 
       * Read all records from log.csv into table
            MOVE 'N' TO FLG-EOF
+           MOVE 1 TO IDX-CNT
+           MOVE 0 TO CNT-LOG
            OPEN INPUT LOG-FILE
            PERFORM UNTIL FLG-EOF = 'Y'
                READ LOG-FILE
@@ -158,7 +162,7 @@
                                        IF M-FLAG(M-IDX) NOT = "INACTIVE"
                                         MOVE "INACTIVE" TO M-FLAG(M-IDX)
                                         ADD 1 TO CNT-INACTIVE
-                                     END-IF
+                                       END-IF
                                         ADD 1 TO M-UNRT-OVCT(M-IDX)
 
                                   END-IF
@@ -209,8 +213,8 @@
            END-PERFORM
            CLOSE MEMBER-FILE
 
-      *>      DISPLAY CNT-OVERDUE " overdue books found, "
-      *>      DISPLAY CNT-INACTIVE " members marked inactive."
+           DISPLAY M-IDX " M-IDX "
+           DISPLAY M-COUNT " M-COUNT"
 
            GOBACK.
        END PROGRAM CheckLog.
