@@ -7,12 +7,14 @@
       * Addition( Khant Ko) : Check member ACTIVE Flag and Fixed address not
       *            Display correctly error
       * Addition( Htay Lwin) : Showing Summary for counts of updated active/inactive members
-      *            and overdue books counts
+      *            and overdue books counts, adjust price
       ******************************************************************
        IDENTIFICATION DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        PROGRAM-ID. CheckLog IS INITIAL.
 
        ENVIRONMENT DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
            SELECT LOG-FILE ASSIGN TO "../log.csv"
@@ -21,6 +23,7 @@
                ORGANIZATION IS LINE SEQUENTIAL.
 
        DATA DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        FILE SECTION.
        FD  LOG-FILE.
        01  LOG-LINE       PIC X(200).
@@ -80,7 +83,7 @@
        01 USER-CHOICE PIC 9(2).
 
        PROCEDURE DIVISION USING USER-CHOICE.
-
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
       * Get system date and convert to integer
            ACCEPT SYS-DATE FROM DATE YYYYMMDD
            COMPUTE SYS-DATE-INT = FUNCTION INTEGER-OF-DATE(SYS-DATE)
@@ -97,20 +100,25 @@
                    NOT AT END
                        MOVE 0 TO Q-CNT
                        INSPECT MEMBER-LINE TALLYING Q-CNT FOR ALL '"'
-                       IF Q-CNT > 0 THEN
+
+                           IF Q-CNT > 0 THEN
                            UNSTRING MEMBER-LINE DELIMITED BY '"'
                            INTO id_to_email, M-ADDRESS(M-IDX),
                                 gender_n_flag
+
                            UNSTRING id_to_email DELIMITED BY ','
                            INTO M-ID(M-IDX),M-NAME(M-IDX),M-EMAIL(M-IDX)
+
                            UNSTRING gender_n_flag DELIMITED BY ','
                            INTO dummy, M-GENDER(M-IDX), M-FLAG(M-IDX)
+
                        ELSE
                            UNSTRING MEMBER-LINE DELIMITED BY ','
                            INTO M-ID(M-IDX), M-NAME(M-IDX),
                                 M-EMAIL(M-IDX), M-ADDRESS(M-IDX),
                                 M-GENDER(M-IDX), M-FLAG(M-IDX)
                        END-IF
+
                        MOVE 0 TO M-UNRT-OVCT(M-IDX)
                        ADD 1 TO M-IDX
                        ADD 1 TO M-COUNT
@@ -124,20 +132,23 @@
            MOVE 1 TO IDX-CNT
            MOVE 0 TO CNT-LOG
            OPEN INPUT LOG-FILE
+
            PERFORM UNTIL FLG-EOF = 'Y'
                READ LOG-FILE
                    AT END
                        MOVE 'Y' TO FLG-EOF
                    NOT AT END
+
                        UNSTRING LOG-LINE DELIMITED BY ","
                            INTO F-ID(IDX-CNT), F-MID(IDX-CNT),
                            F-BID(IDX-CNT), F-SDT(IDX-CNT),
                            F-EDT(IDX-CNT), F-DUE(IDX-CNT),F-RDT(IDX-CNT)
 
-                       IF FUNCTION TRIM(F-RDT(IDX-CNT)) = SPACE
+                   IF FUNCTION TRIM(F-RDT(IDX-CNT)) = SPACE
                            MOVE F-EDT(IDX-CNT) TO RAW-END-DT
                            UNSTRING RAW-END-DT DELIMITED BY "-"
                                INTO DT-DAY, DT-MON, DT-YEAR
+
                            STRING DT-YEAR DELIMITED BY SIZE
                                   DT-MON  DELIMITED BY SIZE
                                   DT-DAY  DELIMITED BY SIZE
@@ -154,21 +165,17 @@
                            IF F-DUE(IDX-CNT) = "YES"
                               PERFORM VARYING M-IDX FROM 1 BY 1
                                 UNTIL M-IDX > M-COUNT
-      *>                             IF F-MID(IDX-CNT) = M-ID(M-IDX)
-      *>                                MOVE "INACTIVE" TO M-FLAG(M-IDX)
-      *>                                ADD 1 TO M-UNRT-OVCT(M-IDX)
 
-                                     IF F-MID(IDX-CNT) = M-ID(M-IDX)
-                                       IF M-FLAG(M-IDX) NOT = "INACTIVE"
+                                  IF F-MID(IDX-CNT) = M-ID(M-IDX)
+                                     IF M-FLAG(M-IDX) NOT = "INACTIVE"
                                         MOVE "INACTIVE" TO M-FLAG(M-IDX)
                                         ADD 1 TO CNT-INACTIVE
-                                       END-IF
+                                     END-IF
                                         ADD 1 TO M-UNRT-OVCT(M-IDX)
-
                                   END-IF
                               END-PERFORM
                            END-IF
-                       END-IF
+                   END-IF
 
                        ADD 1 TO CNT-LOG
                        ADD 1 TO IDX-CNT
@@ -196,9 +203,11 @@
            OPEN OUTPUT MEMBER-FILE
            PERFORM VARYING M-IDX FROM 1 BY 1
              UNTIL M-IDX > M-COUNT
+
                IF M-UNRT-OVCT(M-IDX) = 0 THEN
                    MOVE 'ACTIVE' TO M-FLAG(M-IDX)
                END-IF
+
                STRING
                    M-ID(M-IDX) DELIMITED BY SIZE ","
                    M-NAME(M-IDX) DELIMITED BY SIZE ","
@@ -212,9 +221,6 @@
                WRITE MEMBER-LINE
            END-PERFORM
            CLOSE MEMBER-FILE
-
-      *>      DISPLAY M-IDX " M-IDX "
-      *>      DISPLAY M-COUNT " M-COUNT"
 
            GOBACK.
        END PROGRAM CheckLog.

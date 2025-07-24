@@ -122,10 +122,6 @@
        MOVE "N" TO FOUND
       * Search for matching record to return
        PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > CNT
-      *>      IF MB-ID(IDX) = WS-MEMBER-ID AND
-      *>         BK-ID(IDX) = WS-BOOK-ID AND
-      *>         RTN-DATE(IDX) = SPACES
-
 
            IF MB-ID(IDX) = WS-MEMBER-ID AND
                BK-ID(IDX) = WS-BOOK-ID
@@ -146,7 +142,7 @@
                    SYS-DD DELIMITED BY SIZE
                        INTO END-INT
                    COMPUTE DIFF-DAYS = WS-RETURN-INT - END-INT
-                   COMPUTE FINE-AMOUNT = DIFF-DAYS * 1000
+                   COMPUTE FINE-AMOUNT = DIFF-DAYS * 500
                    DISPLAY "Overdue by ", DIFF-DAYS, " days."
                    DISPLAY "Fine: ", FINE-AMOUNT, " MMK"
                    MOVE 'N' TO CONFIRM

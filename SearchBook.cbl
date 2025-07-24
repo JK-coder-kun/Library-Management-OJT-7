@@ -2,8 +2,8 @@
       * Author : Ei Ei Thant
       * Purpose: Search Books (Subprogram)
       * To fix : OK
-      * Modified by HL(7/10/25)
-      * Modified by KK(7/22/25)
+      * Modified by Htay Lwin(7/10/25)
+      * Modified by Khant Ko(7/22/25)
       ******************************************************************
        IDENTIFICATION DIVISION.
       *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -51,7 +51,7 @@
            88 NO-BOOK-MATCH       VALUE "N".
 
        01 found_flag PIC X value 'N'.
-       01 HEADER-LINE             PIC X(96) VALUE ALL '-'.
+       01 HEADER-LINE             PIC X(110) VALUE ALL '-'.
 
        01 BOOK-HEADER.
            05 FILLER              PIC X(7) VALUE "BOOK ID".
@@ -95,7 +95,6 @@
            DISPLAY "======================"
            DISPLAY "    SEARCH RESULTS"
            DISPLAY "======================"
-      *>      DISPLAY HEADER-LINE
            DISPLAY " "
            DISPLAY BOOK-HEADER
            DISPLAY HEADER-LINE
@@ -125,7 +124,6 @@
            CLOSE BOOK-FILE.
 
       *-----------------------------------------------------------------
-      *>      STOP RUN.
 
        CHECK-MATCH.
            SET NO-BOOK-MATCH TO TRUE
