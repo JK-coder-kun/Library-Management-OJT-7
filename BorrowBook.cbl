@@ -63,7 +63,7 @@
 
 
        01  BOOK-TABLE.
-           05 BOOK-ENTRY OCCURS 100 TIMES.
+           05 BOOK-ENTRY OCCURS 1000 TIMES.
               10  BK-ID     PIC X(5).
               10  BK-NAME   PIC X(30).
               10  BK-AUTHOR PIC X(30).
@@ -126,7 +126,8 @@
 
        IF VALID-FLAG NOT = 'Y'
            DISPLAY "Invalid member or inactive status."
-           EXIT PROGRAM
+           DISPLAY "This person can't borrow book!"
+           GO TO ENDER
        END-IF
 
 

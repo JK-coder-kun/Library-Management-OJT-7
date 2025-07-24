@@ -1,106 +1,88 @@
-20001,To Kill a Mockingbird,Harper Lee,5,Classic
-20002,The 1984,George Orwell,6,Dystopian
-20003,Pride and Prejudice,Jane Austen,7,Romance
-20004,The Great Gatsby,F. Scott Fitzgerald,8,Fiction
-20005,Moby-Dick,Herman Melville,23,Adventure
-20006,The Catcher in the Rye,J.D. Salinger,32,Fiction
-20007,Jane Eyre,Charlotte Brontë,12,Gothic Fiction
-20008,Wuthering Heights,Emily Brontë,13,Gothic Romance
-20009,Brave New World,Aldous Huxley,14,Dystopian
-20010,Crime and Punishment,Fyodor Dostoevsky,21,Psychological Fiction
-20011,The Brothers Karamazov,Fyodor Dostoevsky,10,Philosophical Fiction
-20012,War and Peace,Leo Tolstoy,7,Historical Fiction
-20013,Anna Karenina,Leo Tolstoy,9,Tragedy
-20014,The Lord of the Rings,J.R.R. Tolkien,7,Fantasy
-20015,Harry Potter Series,J.K. Rowling,10,Fantasy
-20016,The Chronicles of Narnia,C.S. Lewis,15,Fantasy
-20017,The Alchemist,Paulo Coelho,15,Inspirational Fiction
-20018,The Book Thief,Markus Zusak,15,Historical Fiction
-20019,The Kite Runner,Khaled Hosseini,12,Historical Fiction
-20020,A Thousand Splendid Suns,Khaled Hosseini,20,Historical Fiction
-20021,One Hundred Years of Solitude,Gabriel García Márquez,6,Magical Realism
-20022,Love in the Time of Cholera,Gabriel García Márquez,8,Romance
-20023,Don Quixote,Miguel de Cervantes,14,Satire
-20024,Les Misérables,Victor Hugo,15,Historical Fiction
-20025,The Count of Monte Cristo,Alexandre Dumas,15,Adventure
-20026,Dracula,Bram Stoker,15,Gothic Horror
-20027,Frankenstein,Mary Shelley,12,Science Fiction
-20028,Animal Farm,George Orwell,13,Political Satire
-20029,The Picture of Dorian Gray,Oscar Wilde,13,Gothic Fiction
-20030,The Bell Jar,Sylvia Plath,12,Fiction
-20031,Slaughterhouse-Five,Kurt Vonnegut,12,Science Fiction
-20032,Fahrenheit 451,Ray Bradbury,14,Dystopian
-20033,The Road,Cormac McCarthy,10,Post-Apocalyptic
-20034,Beloved,Toni Morrison,10,Historical Fiction
-20035,Invisible Man,Ralph Ellison,10,Fiction
-20036,The Color Purple,Alice Walker,10,Historical Fiction
-20037,A Tale of Two Cities,Charles Dickens,10,Historical Fiction
-20038,Great Expectations,Charles Dickens,10,Fiction
-20039,David Copperfield,Charles Dickens,10,Fiction
-20040,Little Women,Louisa May Alcott,10,Coming-of-Age
-20041,The Secret Garden,Frances H. Burnett,10,Children?s Fiction
-20042,Anne of Green Gables,L.M. Montgomery,10,Coming-of-Age
-20043,The Handmaid?s Tale,Margaret Atwood,12,Dystopian
-20044,Midnight?s Children,Salman Rushdie,12,Magical Realism
-20045,Life of Pi,Yann Martel,12,Adventure
-20046,The Goldfinch,Donna Tartt,12,Literary Fiction
-20047,Gone Girl,Gillian Flynn,8,Thriller
-20048,The Girl with the Dragon Tattoo,Stieg Larsson,8,Crime Thriller
-20049,The Da Vinci Code,Dan Brown,8,Mystery/Thriller
-20050,The Shining,Stephen King,8,Horror
-20051,Dune,Frank Herbert,8,Science Fiction
-20052,Ender?s Game,Orson Scott Card,8,Science Fiction
-20053,Foundation,Isaac Asimov,8,Science Fiction
-20054,Neuromancer,William Gibson,15,Cyberpunk
-20055,Ready Player One,Ernest Cline,15,Science Fiction
-20056,Cloud Atlas,David Mitchell,15,Literary Fiction
-20057,Outlander,Diana Gabaldon,15,Historical Romance
-20058,The Help,Kathryn Stockett,9,Historical Fiction
-20059,Water for Elephants,Sara Gruen,9,Historical Fiction
-20060,The Night Circus,Erin Morgenstern,9,Fantasy
-20061,Circe,Madeline Miller,9,Mythological Fiction
-20062,The Song of Achilles,Madeline Miller,9,Historical Romance
-20063,Pachinko,Min Jin Lee,9,Historical Fiction
-20064,Norwegian Wood,Haruki Murakami,7,Literary Fiction
-20065,Kafka on the Shore,Haruki Murakami,7,Magical Realism
-20066,The Wind-Up Bird Chronicle,Haruki Murakami,7,Magical Realism
-20067,The House of the Spirits,Isabel Allende,7,Magical Realism
-20068,White Teeth,Zadie Smith,7,Contemporary Fiction
-20069,On the Road,Jack Kerouac,8,Beat Fiction
-20070,The Old Man and the Sea,Ernest Hemingway,8,Literary Fiction
-20071,A Farewell to Arms,Ernest Hemingway,8,War Fiction
-20072,Lolita,Vladimir Nabokov,8,Controversial Fiction
-20073,Rebecca,Daphne du Maurier,8,Gothic Fiction
-20074,The Giver,Lois Lowry,5,Dystopian
-20075,The Fault in Our Stars,John Green,5,Young Adult
-20076,Looking for Alaska,John Green,5,Young Adult
-20077,Big Little Lies,Liane Moriarty,5,Thriller
-20078,Angels and Demons,Dan Brown,5,Thriller
-20079,It,Stephen King,5,Horror
-20080,Misery,Stephen King,12,Horror
-20081,Pet Sematary,Stephen King,12,Horror
-20082,The Stand,Stephen King,12,Horror
-20083,Oryx and Crake,Margaret Atwood,12,Science Fiction
-20084,The Secret History,Donna Tartt,12,Dark Academia
-20085,Song of Solomon,Toni Morrison,12,Literary Fiction
-20086,Native Son,Richard Wright,12,African-American Fiction
-20087,"I, Robot",Isaac Asimov,12,Science Fiction
-20088,The Time Traveler?s Wife,Audrey Niffenegger,12,Romance
-20089,Snow Crash,Neal Stephenson,12,Cyberpunk
-20090,The Blind Assassin,Margaret Atwood,12,Fiction
-20091,The Satanic Verses,Salman Rushdie,15,Fiction
-20092,Love Story,Erich Segal,15,Romance
-20093,The Perks of Being a Wallflower,Stephen Chbosky,15,Young Adult
-20094,Me Before You,Jojo Moyes,15,Romance
-20095,The Silent Patient,Alex Michaelides,10,Psychological Thriller
-20096,The Great Gatsby,F. Scott Fitzgerald,3,Fiction
-20097,The Great Big,Khant Ko,2,Action
-20098,To Kill a Mockingbird,Harper Lee,3,Classic
-20099,The Hobbit,J.R.R. Tolkien,0,Fantasy
-20100,The Alchemist,Paulo Coelho,5,Philosophical
-20101,Mu La A Sa,Min Zaw,2,Cartoon
-20102,Min Phyu Mhan Mhan Pyaw,Min TheinKha,4,Action
-20103,Return of Hitler,Moskov NaKorh,8,History
-20104,The Monk who sold his Ferrari,Robin Sharma,9,Fiction
-20105,Chicken Soup for The Soul,,10,Inspiration
-20106,Wuthering Heights,Emily Bronte,10,Gothic Novel
+20001,To Kill a Mockingbird         ,Harper Lee                    ,05,Classic
+20002,The 1984                      ,George Orwell                 ,06,Dystopian
+20003,Pride and Prejudice           ,Jane Austen                   ,07,Romance
+20004,The Great Gatsby              ,F. Scott Fitzgerald           ,08,Fiction
+20005,Moby-Dick                     ,Herman Melville               ,23,Adventure
+20006,The Catcher in the Rye        ,J.D. Salinger                 ,32,Fiction
+20007,Jane Eyre                     ,Charlotte Brontë              ,12,Gothic Fiction
+20008,Wuthering Heights             ,Emily Brontë                  ,13,Gothic Romance
+20009,Brave New World               ,Aldous Huxley                 ,14,Dystopian
+20010,Crime and Punishment          ,Fyodor Dostoevsky             ,21,Psychological Fiction
+20011,The Brothers Karamazov        ,Fyodor Dostoevsky             ,10,Philosophical Fiction
+20012,War and Peace                 ,Leo Tolstoy                   ,07,Historical Fiction
+20013,Anna Karenina                 ,Leo Tolstoy                   ,09,Tragedy
+20014,The Lord of the Rings         ,J.R.R. Tolkien                ,07,Fantasy
+20015,Harry Potter Series           ,J.K. Rowling                  ,10,Fantasy
+20016,The Chronicles of Narnia      ,C.S. Lewis                    ,15,Fantasy
+20017,The Alchemist                 ,Paulo Coelho                  ,15,Inspirational Fiction
+20018,The Book Thief                ,Markus Zusak                  ,15,Historical Fiction
+20019,The Kite Runner               ,Khaled Hosseini               ,12,Historical Fiction
+20020,A Thousand Splendid Suns      ,Khaled Hosseini               ,20,Historical Fiction
+20021,One Hundred Years of Solitude ,Gabriel García Márquez        ,06,Magical Realism
+20022,Love in the Time of Cholera   ,Gabriel García Márquez        ,08,Romance
+20023,Don Quixote                   ,Miguel de Cervantes           ,14,Satire
+20024,Les Misérables                ,Victor Hugo                   ,15,Historical Fiction
+20025,The Count of Monte Cristo     ,Alexandre Dumas               ,15,Adventure
+20026,Dracula                       ,Bram Stoker                   ,15,Gothic Horror
+20027,Frankenstein                  ,Mary Shelley                  ,12,Science Fiction
+20028,Animal Farm                   ,George Orwell                 ,13,Political Satire
+20029,The Picture of Dorian Gray    ,Oscar Wilde                   ,13,Gothic Fiction
+20030,The Bell Jar                  ,Sylvia Plath                  ,12,Fiction
+20031,Slaughterhouse-Five           ,Kurt Vonnegut                 ,12,Science Fiction
+20032,Fahrenheit 451                ,Ray Bradbury                  ,14,Dystopian
+20033,The Road                      ,Cormac McCarthy               ,10,Post-Apocalyptic
+20034,Beloved                       ,Toni Morrison                 ,10,Historical Fiction
+20035,Invisible Man                 ,Ralph Ellison                 ,10,Fiction
+20036,The Color Purple              ,Alice Walker                  ,10,Historical Fiction
+20037,A Tale of Two Cities          ,Charles Dickens               ,10,Historical Fiction
+20038,Great Expectations            ,Charles Dickens               ,10,Fiction
+20039,David Copperfield             ,Charles Dickens               ,10,Fiction
+20040,Little Women                  ,Louisa May Alcott             ,10,Coming-of-Age
+20041,The Secret Garden             ,Frances H. Burnett            ,10,Children?s Fiction
+20042,Anne of Green Gables          ,L.M. Montgomery               ,10,Coming-of-Age
+20043,The Handmaid?s Tale           ,Margaret Atwood               ,12,Dystopian
+20044,Midnight?s Children           ,Salman Rushdie                ,12,Magical Realism
+20045,Life of Pi                    ,Yann Martel                   ,12,Adventure
+20046,The Goldfinch                 ,Donna Tartt                   ,12,Literary Fiction
+20047,Gone Girl                     ,Gillian Flynn                 ,08,Thriller
+20048,The Girl with the Dragon Tatto,Stieg Larsson                 ,08,Crime Thriller
+20049,The Da Vinci Code             ,Dan Brown                     ,08,Mystery/Thriller
+20050,The Shining                   ,Stephen King                  ,08,Horror
+20051,Dune                          ,Frank Herbert                 ,08,Science Fiction
+20052,Ender?s Game                  ,Orson Scott Card              ,08,Science Fiction
+20053,Foundation                    ,Isaac Asimov                  ,08,Science Fiction
+20054,Neuromancer                   ,William Gibson                ,15,Cyberpunk
+20055,Ready Player One              ,Ernest Cline                  ,15,Science Fiction
+20056,Cloud Atlas                   ,David Mitchell                ,15,Literary Fiction
+20057,Outlander                     ,Diana Gabaldon                ,15,Historical Romance
+20058,The Help                      ,Kathryn Stockett              ,09,Historical Fiction
+20059,Water for Elephants           ,Sara Gruen                    ,09,Historical Fiction
+20060,The Night Circus              ,Erin Morgenstern              ,09,Fantasy
+20061,Circe                         ,Madeline Miller               ,09,Mythological Fiction
+20062,The Song of Achilles          ,Madeline Miller               ,09,Historical Romance
+20063,Pachinko                      ,Min Jin Lee                   ,09,Historical Fiction
+20064,Norwegian Wood                ,Haruki Murakami               ,07,Literary Fiction
+20065,Kafka on the Shore            ,Haruki Murakami               ,07,Magical Realism
+20066,The Wind-Up Bird Chronicle    ,Haruki Murakami               ,07,Magical Realism
+20067,The House of the Spirits      ,Isabel Allende                ,07,Magical Realism
+20068,White Teeth                   ,Zadie Smith                   ,07,Contemporary Fiction
+20069,On the Road                   ,Jack Kerouac                  ,08,Beat Fiction
+20070,The Old Man and the Sea       ,Ernest Hemingway              ,08,Literary Fiction
+20071,A Farewell to Arms            ,Ernest Hemingway              ,08,War Fiction
+20072,Lolita                        ,Vladimir Nabokov              ,08,Controversial Fiction
+20073,Rebecca                       ,Daphne du Maurier             ,08,Gothic Fiction
+20074,The Giver                     ,Lois Lowry                    ,05,Dystopian
+20075,The Fault in Our Stars        ,John Green                    ,05,Young Adult
+20076,Looking for Alaska            ,John Green                    ,05,Young Adult
+20077,Big Little Lies               ,Liane Moriarty                ,05,Thriller
+20078,Angels and Demons             ,Dan Brown                     ,05,Thriller
+20079,It                            ,Stephen King                  ,06,Horror
+20080,Misery                        ,Stephen King                  ,11,Horror
+20081,Mu La A Sa                    ,Min Zaw                       ,02,Cartoon
+20082,Min Phyu Mhan Mhan Pyaw       ,Min TheinKha                  ,04,Action
+20083,Return of Hitler              ,Moskov NaKorh                 ,08,History
+20084,The Monk who sold his Ferrari ,Robin Sharma                  ,09,Fiction
+20085,Chicken Soup for The Soul     ,                              ,10,Inspiration
+20086,Wuthering Heights             ,Emily Bronte                  ,10,Gothic Novel
+20087,Perfect World                 ,Shi Haung                     ,08,Fantasy
+20088,Lord Snow Eagle               ,Tone Po Shxe Yin              ,10,Fantasy
