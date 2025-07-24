@@ -87,7 +87,8 @@
        01 deco-line           PIC x(77) value all "*-".
        01 f_due_days_disp     PIC Z(3).
        01 f_amount_disp       PIC Z(6).
-
+       01  choice      PIC X.
+       01  counter PIC 999 value 0.
 
        LINKAGE SECTION.
       *-----------------------
@@ -109,10 +110,10 @@
            DISPLAY " "
            DISPLAY DISPLAY-HEADER
 
-               OPEN INPUT FineFile LogFile MemberFile BookFile
+           OPEN INPUT FineFile LogFile MemberFile BookFile
            DISPLAY deco-line
-
-               PERFORM UNTIL EOF-Fine = 'Y'
+           MOVE 0 TO counter
+           PERFORM UNTIL EOF-Fine = 'Y'
             READ FineFile
                 AT END
                     MOVE 'Y' TO EOF-Fine
@@ -136,6 +137,17 @@
                             f_due_days_disp
                             "        "
                             f_amount_disp
+
+                        IF counter >= 10 THEN
+                          MOVE 0 TO counter
+                          DISPLAY "Press Enter (To Show Next Page)"
+                               " or Q(To Quit):"
+                          ACCEPT choice
+                          IF choice = "Q" OR choice = "q" THEN
+                               MOVE 'Y' TO EOF-Fine
+                          END-IF
+                        END-IF
+
             END-READ
            END-PERFORM
 

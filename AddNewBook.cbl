@@ -69,7 +69,7 @@
            ADD 1 TO last-book-id
            MOVE last-book-id TO book_id
 
-           DISPLAY "book_ID__"book_id
+      *>      DISPLAY "book_ID__"book_id
            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
            DISPLAY "*         Add New Book to Library           *"
            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"

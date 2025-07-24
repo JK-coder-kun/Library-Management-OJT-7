@@ -43,7 +43,7 @@
        01  WS-CHECK-CHAR      PIC X.
 
        01  LINE-TABLE.
-           05  LINE-ENTRY OCCURS 100 TIMES.
+           05  LINE-ENTRY OCCURS 1000 TIMES.
                10  LINE-CONTENT  PIC X(200).
 
        77  LINE-ID            PIC 9(3) VALUE 1.

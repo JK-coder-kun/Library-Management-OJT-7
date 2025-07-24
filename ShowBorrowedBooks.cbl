@@ -96,7 +96,10 @@
            05 HDR-DUE-FLAG     PIC X(10) VALUE "DUE FLAG".
 
        01 DECOR-LINE PIC X(125) VALUE ALL "*-".
-
+       01 BEOF PIC X VALUE 'N'.
+       01 MEOF PIC X VALUE 'N'.
+       01  choice      PIC X.
+       01  counter PIC 999 value 0.
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
        PROCEDURE DIVISION USING USER-CHOICE.
@@ -159,9 +162,20 @@
                 DISPLAY NON-RETURN-BOOKS-HEADER
                 DISPLAY DECOR-LINE
             END-IF
+            MOVE 0 TO counter
             PERFORM UNTIL IDX = 0
                DISPLAY non_return_books(IDX)
                SET IDX DOWN BY 1
+               ADD 1 TO counter
+                    IF counter >= 10 THEN
+                          MOVE 0 TO counter
+                          DISPLAY "Press Enter (To Show Next Page)"
+                               " or Q(To Quit):"
+                          ACCEPT choice
+                          IF choice = "Q" OR choice = "q" THEN
+                               MOVE 0 TO IDX
+                          END-IF
+                    END-IF
             END-PERFORM
 
             DISPLAY " "
@@ -181,13 +195,13 @@
                     'Status:'file_status
                     EXIT PROGRAM
                END-IF
-
+               MOVE 'N' TO MEOF
                MOVE 'N' TO no_member_flag
                PERFORM UNTIL memberName(IDX) not = SPACES OR
-                   no_member_flag = 'Y'
+                   MEOF = 'Y'
                READ MemberFile
                AT END
-                   MOVE 'Y' TO no_member_flag
+                   MOVE 'Y' TO MEOF
                NOT AT END
                    UNSTRING member DELIMITED BY ','
                    INTO member_src_id
@@ -197,9 +211,9 @@
                    END-IF
                END-READ
                END-PERFORM
-               IF no_member_flag = 'Y' THEN
-                   MOVE 'Not Found!' TO memberName(IDX)
-               END-IF
+      *>          IF no_member_flag = 'Y' THEN
+      *>              MOVE 'Not Found!' TO memberName(IDX)
+      *>          END-IF
            CLOSE MemberFile.
 
       *-----------------------------------------------------------------
@@ -210,13 +224,13 @@
                     'Status:'file_status
                     EXIT PROGRAM
                END-IF
-
+               MOVE 'N' TO BEOF
                MOVE 'N' TO no_book_flag
                PERFORM UNTIL bookName(IDX) not = SPACES OR
-                   no_book_flag = 'Y'
+                   BEOF = 'Y'
                READ BookFile
                AT END
-                    MOVE 'Y' TO no_book_flag
+                    MOVE 'Y' TO BEOF
                NOT AT END
                    UNSTRING book DELIMITED BY ','
                    INTO book_src_id
@@ -226,9 +240,9 @@
                    END-IF
                END-READ
                END-PERFORM
-               IF no_book_flag = 'Y' THEN
-                   MOVE 'Not Found!' TO bookName(IDX)
-               END-IF
+      *>          IF no_book_flag = 'Y' THEN
+      *>              MOVE 'Not Found!' TO bookName(IDX)
+      *>          END-IF
            CLOSE BookFile.
       *-----------------------------------------------------------------
        END PROGRAM ShowBorrowedBooks.

@@ -75,7 +75,8 @@
            05 FILLER PIC X(10)  VALUE "ReturnDate".
 
        01 deco-line           PIC x(83) value all "*-".
-
+       01  choice      PIC X.
+       01  counter PIC 999 value 0.
        LINKAGE SECTION.
       *-----------------------
        01 USER-CHOICE PIC 9(2).
@@ -104,7 +105,7 @@
                END-READ
 
                DISPLAY deco-line
-
+               MOVE 0 TO counter
                PERFORM UNTIL EOF-Log = 'Y'
                    UNSTRING LogRecord DELIMITED BY ","
                        INTO l_tran_id, l_member_id, l_book_id,
@@ -121,7 +122,16 @@
                             l_start_date " " " "
                             l_due_flag " "
                             l_return_date
-
+                        ADD 1 TO counter
+                        IF counter >= 10 THEN
+                          MOVE 0 TO counter
+                          DISPLAY "Press Enter (To Show Next Page)"
+                               " or Q(To Quit):"
+                          ACCEPT choice
+                          IF choice = "Q" OR choice = "q" THEN
+                               MOVE 'Y' TO EOF-Log
+                          END-IF
+                    END-IF
                         READ LogFile
                         AT END MOVE 'Y' TO EOF-Log
                     END-READ

@@ -213,8 +213,8 @@
            END-PERFORM
            CLOSE MEMBER-FILE
 
-           DISPLAY M-IDX " M-IDX "
-           DISPLAY M-COUNT " M-COUNT"
+      *>      DISPLAY M-IDX " M-IDX "
+      *>      DISPLAY M-COUNT " M-COUNT"
 
            GOBACK.
        END PROGRAM CheckLog.

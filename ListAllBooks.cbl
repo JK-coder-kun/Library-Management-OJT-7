@@ -55,7 +55,8 @@
 
 
        01 DECOR-LINE              PIC X(95) VALUE ALL '*-'.
-
+       01  choice      PIC X.
+       01  counter PIC 999 value 0.
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
 
@@ -74,7 +75,7 @@
                DISPLAY DECOR-LINE
                DISPLAY BOOK-HEADER
                DISPLAY DECOR-LINE
-
+               MOVE 0 TO counter
                PERFORM UNTIL BOOK-STATUS = '10'
                    READ BOOK-FILE
                        AT END
@@ -92,6 +93,16 @@
                            MOVE book_genre    TO DISP-BOOK-GENRE
                            DISPLAY BOOK-DISPLAY-LINE
 
+                           ADD 1 TO counter
+                           IF counter >= 10 THEN
+                               MOVE 0 TO counter
+                               DISPLAY "Press Enter (To Show Next Page)"
+                               " or Q(To Quit):"
+                               ACCEPT choice
+                               IF choice = "Q" OR choice = "q" THEN
+                                   MOVE '10' TO BOOK-STATUS
+                               END-IF
+                           END-IF
                    END-READ
                END-PERFORM
       *>          DISPLAY DECOR-LINE
