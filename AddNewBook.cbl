@@ -40,6 +40,9 @@
        01  ws-check-char           PIC X.
        01  ws-i                    PIC 9(2).
        01  ws-num-only             PIC 9(2) VALUE 0.
+       01  bname-valid             PIC X VALUE 'N'.
+       01  bauthor-valid           PIC X VALUE 'N'.
+       01  bgenre-valid            PIC X VALUE 'N'.
 
        LINKAGE SECTION.
       *-----------------------
@@ -73,9 +76,25 @@
            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
            DISPLAY "*         Add New Book to Library           *"
            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-
-           DISPLAY "Enter Book Name     : " ACCEPT book_name
-           DISPLAY "Enter Author Name   : " ACCEPT book_author
+           MOVE 'N' TO bname-valid
+           MOVE 'N' TO bauthor-valid
+           MOVE 'N' TO bgenre-valid
+           PERFORM UNTIL bname-valid = 'Y'
+               DISPLAY "Enter Book Name     : " ACCEPT book_name
+               IF book_name not = SPACE THEN
+                   MOVE 'Y' TO bname-valid
+               ELSE
+                   DISPLAY "Book Name can't be blank!"
+               END-IF
+           END-PERFORM
+           PERFORM UNTIL bauthor-valid = 'Y'
+               DISPLAY "Enter Author Name   : " ACCEPT book_author
+               IF book_author not = SPACE THEN
+                   MOVE 'Y' TO bauthor-valid
+               ELSE
+                   DISPLAY "Author Name can't be blank!"
+               END-IF
+           END-PERFORM
 
            PERFORM UNTIL ws-valid-count = 'Y'
                DISPLAY "Enter Book Count (Only digits): "
@@ -91,15 +110,23 @@
                END-PERFORM
 
            IF ws-num-only NOT =
-               FUNCTION LENGTH(FUNCTION TRIM(book_count))
-           DISPLAY "Book Count must be a number. Try again."
-            MOVE 'N' TO ws-valid-count
-               ELSE
-                   MOVE 'Y' TO ws-valid-count
+               FUNCTION LENGTH(FUNCTION TRIM(book_count)) OR
+               FUNCTION LENGTH(FUNCTION TRIM(book_count)) = 0
+               DISPLAY "Book Count must be a number. Try again."
+               MOVE 'N' TO ws-valid-count
+           ELSE
+               MOVE 'Y' TO ws-valid-count
                END-IF
            END-PERFORM
 
-           DISPLAY "Enter Genre         : " ACCEPT book_genre
+           PERFORM UNTIL bgenre-valid = 'Y'
+               DISPLAY "Enter Genre         : " ACCEPT book_genre
+               IF book_genre not = SPACE THEN
+                   MOVE 'Y' TO bgenre-valid
+               ELSE
+                   DISPLAY "Genre can't be blank!"
+               END-IF
+           END-PERFORM
            DISPLAY "*------------------------------------------*"
            DISPLAY "Enter 1 to Save, 0 to Cancel: "
            ACCEPT add-book-confirm-choice

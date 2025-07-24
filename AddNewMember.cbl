@@ -54,7 +54,7 @@
        01  last_line              PIC X(200).
        01  last_member_id_str     PIC X(5).
        01  last_member_id         PIC 9(5).
-
+       01  input-valid            PIC X VALUE 'N'.
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
        PROCEDURE DIVISION USING USER-CHOICE.
@@ -96,8 +96,17 @@
            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
            DISPLAY "* New Member Registration                     *"
            DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-           DISPLAY "* Enter Name       : "
-           ACCEPT member_name
+
+           MOVE 'N' TO input-valid
+           PERFORM UNTIL input-valid = 'Y'
+               DISPLAY "* Enter Name       : "
+               ACCEPT member_name
+               IF member_name not = SPACE THEN
+                   MOVE 'Y' TO input-valid
+               ELSE
+                   DISPLAY "Name can't be blank!"
+               END-IF
+           END-PERFORM
 
 
            PERFORM UNTIL ws-valid-email = "Y"
@@ -126,10 +135,16 @@
            END-IF
            END-PERFORM
 
-
-
+           MOVE 'N' TO input-valid
+           PERFORM UNTIL input-valid='Y'
            DISPLAY "* Enter Address    : "
            ACCEPT member_address
+               IF member_address not = SPACE THEN
+                   MOVE 'Y' TO input-valid
+               ELSE
+                   DISPLAY "Address can't be blank!"
+               END-IF
+           END-PERFORM
 
 
            PERFORM UNTIL ws-valid-gender = "Y"

@@ -177,7 +177,7 @@
                           END-IF
                     END-IF
             END-PERFORM
-
+            DISPLAY DECOR-LINE
             DISPLAY " "
             MOVE total_not_return TO disp_count
             DISPLAY "Number of Books that are not returned:"

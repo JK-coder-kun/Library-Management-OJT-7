@@ -48,6 +48,7 @@
        01  ws-i                   PIC 9(2) VALUE 1.
        01  ws-length              PIC 9(2).
        01  ws-valid-gender        PIC X VALUE 'N'.
+       01  ws-valid-status        PIC X VALUE 'N'.
 
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
@@ -179,12 +180,30 @@
                END-IF
            END-IF
        END-PERFORM
-           DISPLAY "Change Member Status (or press ENTER to skip): "
+      *>      DISPLAY "Change Member Status (or press ENTER to skip): "
+      *>      ACCEPT new_member_flag
+      *>      IF new_member_flag = SPACES THEN
+      *>          MOVE member_flag TO new_member_flag
+      *>      END-IF
+       MOVE 'N' TO ws-valid-status
+       PERFORM UNTIL ws-valid-status = 'Y'
+           DISPLAY "Change Member Status (or press ENTER to keep"
+           " current): "
            ACCEPT new_member_flag
            IF new_member_flag = SPACES THEN
                MOVE member_flag TO new_member_flag
+               MOVE 'Y' TO ws-valid-status
+           ELSE
+               MOVE FUNCTION UPPER-CASE(new_member_flag) TO
+               new_member_flag
+               IF new_member_flag = 'ACTIVE' OR 'INACTIVE' THEN
+                   MOVE 'Y' TO ws-valid-status
+               ELSE
+                   DISPLAY "Invalid status! Use 'ACTIVE' or 'INACTIVE'"
+                   "For Member Status."
+               END-IF
            END-IF
-
+       END-PERFORM
            STRING
                    new_member_id        DELIMITED BY SIZE
                    ","                   DELIMITED BY SIZE
