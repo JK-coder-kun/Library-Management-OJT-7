@@ -2,8 +2,9 @@
       * Author:Kaung Khant Nyein
       * Date: 11.7.2025
       * Purpose: Borrow a book form library
-      * (Addition Khant Ko) :Fix Accepting all issues regardless of
+      * (Khant Ko Updated)  :Fix Accepting all issues regardless of
       * remaining book count and member status
+      * (Htay Lwin Updated) :Output Display Updated
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. BorrowBook.
@@ -76,6 +77,9 @@
        01  FOUND-ID-FLAG     PIC X VALUE 'N'.  *> Book ID found flag
        01  BOOK-AVAILABLE    PIC X VALUE 'N'.  *> Book count > 0 flag
 
+       01  FOUND-BK-NAME   PIC X(30).
+       01  FOUND-MEMBER-NAME   PIC X(30).
+
        LINKAGE SECTION.
        01 USER-CHOICE PIC 9(2).
        PROCEDURE DIVISION USING USER-CHOICE.
@@ -84,11 +88,12 @@
            STOP RUN.
        MAIN-PROCEDURE.
 
+       DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-"
        DISPLAY "Enter Member ID: "
        ACCEPT WS-MEMBER-ID
        DISPLAY "Enter Book ID: "
        ACCEPT WS-BOOK-ID
-
+       DISPLAY "*-*-*-*-*-*-*-*-*-*-*-*-"
 
        OPEN INPUT MEMBER-FILE
        MOVE 'N' TO FILE-END
@@ -116,6 +121,7 @@
                    END-IF
 
                    IF MEMBER-ID-F = WS-MEMBER-ID
+                       MOVE MEMBER-NAME TO FOUND-MEMBER-NAME
                        IF MEMBER-FLAG = "ACTIVE"
                            MOVE 'Y' TO VALID-FLAG
                        END-IF
@@ -148,6 +154,7 @@
                      BK-GENRE(BK-IDX)
 
             IF BK-ID(BK-IDX) = WS-BOOK-ID
+                MOVE BK-NAME(BK-IDX) TO FOUND-BK-NAME
                 MOVE 'Y' TO FOUND-ID-FLAG
 
                 IF BK-COUNT(BK-IDX) > 0
@@ -245,7 +252,16 @@
        END-PERFORM
        CLOSE BOOK-FILE
 
-       DISPLAY "Book borrowed successfully. Transaction ID: "
-       NEW-TRAN-ID.
+       DISPLAY " "
+       DISPLAY "-----------------------------------"
+       DISPLAY "=== Book borrowed successfully. ==="
+       DISPLAY " "
+       DISPLAY "Transaction ID: " NEW-TRAN-ID
+       DISPLAY "Member Name   : " FOUND-MEMBER-NAME
+       DISPLAY "Borrowed Book : " FOUND-BK-NAME
+       DISPLAY "Borrow Date   : " START-DATE
+       DISPLAY "Due Date      : " END-DATE
+       DISPLAY "-----------------------------------".
+
        ENDER.
-       END PROGRAM BorrowBook.
+           END PROGRAM BorrowBook.
